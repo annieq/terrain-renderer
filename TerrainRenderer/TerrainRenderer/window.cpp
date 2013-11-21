@@ -1,6 +1,6 @@
 #include "window.h"
 
-void Window::initialize()
+bool Window::initialize()
 {
 	HWND hWindow;
 	WNDCLASSEX wc;
@@ -33,6 +33,12 @@ void Window::initialize()
                           NULL);    // used with multiple windows, NULL
 
 	ShowWindow(hWindow, SW_SHOW);
+
+	m_renderer = new Renderer();
+	if (!m_renderer->initializeDX(hWindow))
+		return false;
+	
+	return true;
 }
 
 void Window::run()
@@ -55,6 +61,11 @@ void Window::run()
 			// RENDERING
 		}
     }
+}
+
+void Window::shutdown()
+{
+	m_renderer->shutdown();
 }
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

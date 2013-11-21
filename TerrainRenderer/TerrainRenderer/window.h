@@ -1,17 +1,18 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "common.h"
+#include "renderer.h"
 
 /// A class for handling the window
 class Window
 {
 public:
-	//Window();
-	//~Window();
-
-	void initialize();
+	bool initialize();
 	void run();
+	void shutdown();
+
+private:
+	Renderer *m_renderer;
 };
 
 static LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);

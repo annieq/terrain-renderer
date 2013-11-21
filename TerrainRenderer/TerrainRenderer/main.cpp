@@ -4,6 +4,9 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
 	Window w;
-	w.initialize();
-	w.run();
+
+	if (w.initialize())
+		w.run();
+
+	w.shutdown();
 }
