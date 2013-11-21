@@ -23,9 +23,9 @@ bool Renderer::initializeDX(HWND hWnd)
 	swapChainDesc.SampleDesc.Quality = 0;
     swapChainDesc.Windowed = TRUE;                                  // windowed/full-screen mode
 
-	D3D_FEATURE_LEVEL featureLvl = D3D_FEATURE_LEVEL_11_0;
+	//D3D_FEATURE_LEVEL featureLvl = D3D_FEATURE_LEVEL_9_1;
 
-	hr = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, NULL, &featureLvl, 1,
+	hr = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, NULL, NULL, NULL,//&featureLvl, 1,
 				D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, NULL, &m_deviceContext);
 	if (FAILED(hr))
 		return false;

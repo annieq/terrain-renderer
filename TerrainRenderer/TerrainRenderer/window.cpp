@@ -23,8 +23,8 @@ bool Window::initialize()
                           L"Terrain Renderer v. 1.0",   // title of the window
 						  WS_OVERLAPPEDWINDOW,	// window style
 						  //WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP /*| WS_MAXIMIZE */,    // window style - without frames
-                          300,    // x-position of the window
-                          300,    // y-position of the window
+                          100,    // x-position of the window
+                          100,    // y-position of the window
                           500,    // width of the window
                           400,    // height of the window
                           NULL,    // we have no parent window, NULL
