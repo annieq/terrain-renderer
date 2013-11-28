@@ -59,6 +59,7 @@ void Window::run()
 		else
 		{
 			// RENDERING
+			m_renderer->renderFrame();
 		}
     }
 }

@@ -30,9 +30,37 @@ bool Renderer::initializeDX(HWND hWnd)
 	if (FAILED(hr))
 		return false;
 
-	// TODO: inne inicjalizacyjne rzeczy
+	// back buffer & render target
+	hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_backBuffer);
+	if (FAILED(hr))
+		return false;
+	hr = m_device->CreateRenderTargetView(m_backBuffer, NULL, &m_renderTargetView);
+	if (FAILED(hr))
+		return false;
+	m_backBuffer->Release();	// we no longer need it
+
+	// tu mo¿e byæ jeszcze np. inicjalizacja depthStencil
+
+	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, NULL);
+
+	// viewport
+	m_viewport.Width = 800;
+	m_viewport.Height = 600;
+	m_viewport.TopLeftX = 0.0;
+	m_viewport.TopLeftY = 0.0;
+	m_deviceContext->RSSetViewports(1, &m_viewport);
 
 	return true;
+}
+
+void Renderer::renderFrame()
+{
+	static float color = 0.0;
+	color += 0.0001;
+	if (color > 1.0)
+		color = 0.0;
+	m_deviceContext->ClearRenderTargetView(m_renderTargetView, D3DXCOLOR(color, 0.0, 1.0, 1.0));
+	m_swapChain->Present(0, 0);
 }
 
 void Renderer::shutdown()
