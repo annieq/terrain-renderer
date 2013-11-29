@@ -3,13 +3,14 @@
 
 #include "common.h"
 #include <d3dx9math.h>
+#include "shader.h"
 
 /// A renderer class (using DX)
 class Renderer
 {
 public:
 	Renderer();
-	bool initializeDX(HWND);
+	bool initDX(HWND);
 	void renderFrame();
 	void shutdown();
 
@@ -20,6 +21,8 @@ private:
 	ID3D11Texture2D *m_backBuffer;
 	ID3D11RenderTargetView *m_renderTargetView;
 	D3D11_VIEWPORT m_viewport;
+
+	Shader shader;
 };
 
 #endif

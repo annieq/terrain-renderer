@@ -7,7 +7,7 @@ Renderer::Renderer()
 	m_deviceContext = 0;
 }
 
-bool Renderer::initializeDX(HWND hWnd)
+bool Renderer::initDX(HWND hWnd)
 {
 	HRESULT hr;
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
@@ -50,12 +50,14 @@ bool Renderer::initializeDX(HWND hWnd)
 	m_viewport.TopLeftY = 0.0;
 	m_deviceContext->RSSetViewports(1, &m_viewport);
 
+	shader.init(m_device, m_deviceContext);
+
 	return true;
 }
 
 void Renderer::renderFrame()
 {
-	static float color = 0.0;
+	static double color = 0.0;
 	color += 0.0001;
 	if (color > 1.0)
 		color = 0.0;
@@ -67,6 +69,9 @@ void Renderer::shutdown()
 {
 	if (m_swapChain)
 		m_swapChain->Release();
+	shader.release();
+	if (m_renderTargetView)
+		m_renderTargetView->Release();
 	if (m_device)
 		m_device->Release();
 	if (m_deviceContext)

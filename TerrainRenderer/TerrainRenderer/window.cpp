@@ -35,7 +35,7 @@ bool Window::initialize()
 	ShowWindow(hWindow, SW_SHOW);
 
 	m_renderer = new Renderer();
-	if (!m_renderer->initializeDX(hWindow))
+	if (!m_renderer->initDX(hWindow))
 		return false;
 	
 	return true;
