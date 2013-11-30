@@ -25,8 +25,8 @@ bool Window::initialize()
 						  //WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP /*| WS_MAXIMIZE */,    // window style - without frames
                           100,    // x-position of the window
                           100,    // y-position of the window
-                          500,    // width of the window
-                          400,    // height of the window
+                          800,    // width of the window
+                          600,    // height of the window
                           NULL,    // we have no parent window, NULL
                           NULL,    // we aren't using menus, NULL
 						  GetModuleHandle(NULL),    // application handle
@@ -44,6 +44,7 @@ bool Window::initialize()
 void Window::run()
 {
 	MSG msg;
+	int cnt = 0;
 	
 	ZeroMemory(&msg, sizeof(MSG));
 
@@ -60,6 +61,7 @@ void Window::run()
 		{
 			// RENDERING
 			m_renderer->renderFrame();
+			cnt++;
 		}
     }
 }

@@ -4,6 +4,7 @@
 //#include <D3Dcompiler.h>
 #include <D3DX11.h>
 #include <d3dx9math.h>
+#include <vector>
 
 // A class for handling shaders
 class Shader
@@ -15,6 +16,7 @@ public:
 private:
 	ID3D11VertexShader *m_vShader;
 	ID3D11PixelShader *m_pShader;
+	ID3D11InputLayout *m_inputLayout;
 };
 
 

@@ -44,6 +44,7 @@ bool Renderer::initDX(HWND hWnd)
 	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, NULL);
 
 	// viewport
+	ZeroMemory(&m_viewport, sizeof(D3D11_VIEWPORT));
 	m_viewport.Width = 800;
 	m_viewport.Height = 600;
 	m_viewport.TopLeftX = 0.0;
@@ -51,17 +52,65 @@ bool Renderer::initDX(HWND hWnd)
 	m_deviceContext->RSSetViewports(1, &m_viewport);
 
 	shader.init(m_device, m_deviceContext);
+	if (!drawFigure())
+		return false;
+
+	return true;
+}
+
+bool Renderer::drawFigure()
+{
+	HRESULT hr;
+
+	std::vector<Vertex_PosCol> vertices;
+	vertices.push_back(Vertex_PosCol(+0.5, +0.5, 0.0, D3DXCOLOR(1.0, 0.0, 1.0, 1.0) ));
+	vertices.push_back(Vertex_PosCol(-0.5, -0.5, 0.0, D3DXCOLOR(1.0, 1.0, 1.0, 1.0) ));
+	vertices.push_back(Vertex_PosCol(-0.5, +0.5, 0.0, D3DXCOLOR(1.0, 1.0, 1.0, 1.0) ));
+	//vertices.push_back(Vertex_PosCol(0.0f, 0.5f, 0.0f, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f) ));
+	//vertices.push_back(Vertex_PosCol(0.45f, -0.5, 0.0f, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f) ));
+	//vertices.push_back(Vertex_PosCol(-0.45f, -0.5f, 0.0f, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f) ));
+
+	m_numberOfVertices = vertices.size();
+
+	// vertex buffer
+	D3D11_BUFFER_DESC bufDesc = D3D11_BUFFER_DESC();
+	bufDesc.Usage = D3D11_USAGE_DEFAULT;
+	bufDesc.ByteWidth = sizeof(Vertex_PosCol) * m_numberOfVertices;
+	bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufDesc.CPUAccessFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA bufData = D3D11_SUBRESOURCE_DATA();
+	bufData.pSysMem = &vertices[0];
+
+	hr = m_device->CreateBuffer(&bufDesc, &bufData, &m_vBuffer);
+	if (FAILED(hr))
+		return false;
 
 	return true;
 }
 
 void Renderer::renderFrame()
 {
-	static double color = 0.0;
-	color += 0.0001;
-	if (color > 1.0)
-		color = 0.0;
-	m_deviceContext->ClearRenderTargetView(m_renderTargetView, D3DXCOLOR(color, 0.0, 1.0, 1.0));
+	/*************** lol *****************/
+	static double cnt = 0;
+	static bool dir = true;
+	if (cnt > 1.0 || cnt < 0.0)
+		dir = !dir;
+	if (dir)
+		cnt += 0.0001;
+	else
+		cnt -= 0.0001;
+	/************ end of lol ************/
+	m_deviceContext->ClearRenderTargetView(m_renderTargetView, D3DXCOLOR(cnt, cnt, 0.3, 1.0));
+
+	// configure Input Assembler stage
+	UINT stride = sizeof(Vertex_PosCol);
+	UINT offset = 0;
+	m_deviceContext->IASetVertexBuffers(0, 1, &m_vBuffer, &stride, &offset);
+	//m_deviceContext->IASetIndexBuffer( ... );	// when using index buffers
+	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	m_deviceContext->Draw(m_numberOfVertices, 0);
+
 	m_swapChain->Present(0, 0);
 }
 
