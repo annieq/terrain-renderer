@@ -63,14 +63,21 @@ bool Renderer::drawFigure()
 	HRESULT hr;
 
 	std::vector<Vertex_PosCol> vertices;
+	std::vector<WORD> indices;
+
 	vertices.push_back(Vertex_PosCol(+0.5, +0.5, 0.0, D3DXCOLOR(1.0, 0.0, 1.0, 1.0) ));
 	vertices.push_back(Vertex_PosCol(-0.5, -0.5, 0.0, D3DXCOLOR(1.0, 1.0, 1.0, 1.0) ));
 	vertices.push_back(Vertex_PosCol(-0.5, +0.5, 0.0, D3DXCOLOR(1.0, 1.0, 1.0, 1.0) ));
-	//vertices.push_back(Vertex_PosCol(0.0f, 0.5f, 0.0f, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f) ));
-	//vertices.push_back(Vertex_PosCol(0.45f, -0.5, 0.0f, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f) ));
-	//vertices.push_back(Vertex_PosCol(-0.45f, -0.5f, 0.0f, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f) ));
-
+	vertices.push_back(Vertex_PosCol(+0.5, -0.5, 0.0, D3DXCOLOR(0.0, 0.0, 0.0, 1.0) ));
 	m_numberOfVertices = vertices.size();
+
+	indices.push_back(0);
+	indices.push_back(1);
+	indices.push_back(2);
+	indices.push_back(0);
+	indices.push_back(3);
+	indices.push_back(1);
+	m_numberOfIndices = indices.size();
 
 	// vertex buffer
 	D3D11_BUFFER_DESC bufDesc = D3D11_BUFFER_DESC();
@@ -83,6 +90,15 @@ bool Renderer::drawFigure()
 	bufData.pSysMem = &vertices[0];
 
 	hr = m_device->CreateBuffer(&bufDesc, &bufData, &m_vBuffer);
+	if (FAILED(hr))
+		return false;
+
+	// index buffer
+	bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	bufDesc.ByteWidth = sizeof(DWORD) * m_numberOfIndices;
+	bufData.pSysMem = &indices[0];
+
+	hr = m_device->CreateBuffer(&bufDesc, &bufData, &m_iBuffer);
 	if (FAILED(hr))
 		return false;
 
@@ -107,9 +123,17 @@ void Renderer::renderFrame()
 	UINT stride = sizeof(Vertex_PosCol);
 	UINT offset = 0;
 	m_deviceContext->IASetVertexBuffers(0, 1, &m_vBuffer, &stride, &offset);
-	//m_deviceContext->IASetIndexBuffer( ... );	// when using index buffers
+	m_deviceContext->IASetIndexBuffer(m_iBuffer, DXGI_FORMAT_R16_UINT, 0);
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	m_deviceContext->Draw(m_numberOfVertices, 0);
+
+	// draw vertices
+	if (m_numberOfVertices)
+	{
+		if (m_numberOfIndices)
+			m_deviceContext->DrawIndexed(m_numberOfIndices, 0, 0);
+		else
+			m_deviceContext->Draw(m_numberOfVertices, 0);
+	}
 
 	m_swapChain->Present(0, 0);
 }

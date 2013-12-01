@@ -25,9 +25,9 @@ private:
 	ID3D11Texture2D *m_backBuffer;
 	ID3D11RenderTargetView *m_renderTargetView;
 	D3D11_VIEWPORT m_viewport;
-	ID3D11Buffer *m_vBuffer;
+	ID3D11Buffer *m_vBuffer, *m_iBuffer;
 
-	unsigned int m_numberOfVertices;
+	unsigned int m_numberOfVertices, m_numberOfIndices;
 
 	Shader shader;
 };
