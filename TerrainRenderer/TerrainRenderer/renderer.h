@@ -4,6 +4,7 @@
 #include "common.h"
 #include <d3dx9math.h>
 #include "shader.h"
+#include "terrain.h"
 #include <vector>
 
 /// A renderer class (using DX)
@@ -16,7 +17,7 @@ public:
 	void shutdown();
 
 private:
-	bool drawFigure();
+	//bool drawFigure();
 
 private:
 	IDXGISwapChain *m_swapChain;
@@ -31,6 +32,7 @@ private:
 
 	Shader shader;
 };
+
 struct VERTEX
 {
       FLOAT X, Y, Z;      // position

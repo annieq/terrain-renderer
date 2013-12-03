@@ -52,58 +52,63 @@ bool Renderer::initDX(HWND hWnd)
 	m_deviceContext->RSSetViewports(1, &m_viewport);
 
 	shader.init(m_device, m_deviceContext);
-	if (!drawFigure())
+
+	// draw a terrain (actually set vertex & index buffers :P)
+	Terrain terr = Terrain(m_device);
+	if (!terr.createVertices(&m_vBuffer, &m_numberOfVertices))
+		return false;
+	if (!terr.createIndices(&m_iBuffer, &m_numberOfIndices))
 		return false;
 
 	return true;
 }
 
-bool Renderer::drawFigure()
-{
-	HRESULT hr;
-
-	std::vector<Vertex_PosCol> vertices;
-	std::vector<WORD> indices;
-
-	vertices.push_back(Vertex_PosCol(+0.5, +0.5, 0.0, D3DXCOLOR(1.0, 0.0, 1.0, 1.0) ));
-	vertices.push_back(Vertex_PosCol(-0.5, -0.5, 0.0, D3DXCOLOR(1.0, 1.0, 1.0, 1.0) ));
-	vertices.push_back(Vertex_PosCol(-0.5, +0.5, 0.0, D3DXCOLOR(1.0, 1.0, 1.0, 1.0) ));
-	vertices.push_back(Vertex_PosCol(+0.5, -0.5, 0.0, D3DXCOLOR(0.0, 0.0, 0.0, 1.0) ));
-	m_numberOfVertices = vertices.size();
-
-	indices.push_back(0);
-	indices.push_back(1);
-	indices.push_back(2);
-	indices.push_back(0);
-	indices.push_back(3);
-	indices.push_back(1);
-	m_numberOfIndices = indices.size();
-
-	// vertex buffer
-	D3D11_BUFFER_DESC bufDesc = D3D11_BUFFER_DESC();
-	bufDesc.Usage = D3D11_USAGE_DEFAULT;
-	bufDesc.ByteWidth = sizeof(Vertex_PosCol) * m_numberOfVertices;
-	bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bufDesc.CPUAccessFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA bufData = D3D11_SUBRESOURCE_DATA();
-	bufData.pSysMem = &vertices[0];
-
-	hr = m_device->CreateBuffer(&bufDesc, &bufData, &m_vBuffer);
-	if (FAILED(hr))
-		return false;
-
-	// index buffer
-	bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	bufDesc.ByteWidth = sizeof(DWORD) * m_numberOfIndices;
-	bufData.pSysMem = &indices[0];
-
-	hr = m_device->CreateBuffer(&bufDesc, &bufData, &m_iBuffer);
-	if (FAILED(hr))
-		return false;
-
-	return true;
-}
+//bool Renderer::drawFigure()
+//{
+//	HRESULT hr;
+//
+//	std::vector<Vertex_PosCol> vertices;
+//	std::vector<WORD> indices;
+//
+//	vertices.push_back(Vertex_PosCol(+0.5, +0.5, 0.0, D3DXCOLOR(1.0, 0.0, 1.0, 1.0) ));
+//	vertices.push_back(Vertex_PosCol(-0.5, -0.5, 0.0, D3DXCOLOR(1.0, 1.0, 1.0, 1.0) ));
+//	vertices.push_back(Vertex_PosCol(-0.5, +0.5, 0.0, D3DXCOLOR(1.0, 1.0, 1.0, 1.0) ));
+//	vertices.push_back(Vertex_PosCol(+0.5, -0.5, 0.0, D3DXCOLOR(0.0, 0.0, 0.0, 1.0) ));
+//	m_numberOfVertices = vertices.size();
+//
+//	indices.push_back(0);
+//	indices.push_back(1);
+//	indices.push_back(2);
+//	indices.push_back(0);
+//	indices.push_back(3);
+//	indices.push_back(1);
+//	m_numberOfIndices = indices.size();
+//
+//	// vertex buffer
+//	D3D11_BUFFER_DESC bufDesc = D3D11_BUFFER_DESC();
+//	bufDesc.Usage = D3D11_USAGE_DEFAULT;
+//	bufDesc.ByteWidth = sizeof(Vertex_PosCol) * m_numberOfVertices;
+//	bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+//	bufDesc.CPUAccessFlags = 0;
+//
+//	D3D11_SUBRESOURCE_DATA bufData = D3D11_SUBRESOURCE_DATA();
+//	bufData.pSysMem = &vertices[0];
+//
+//	hr = m_device->CreateBuffer(&bufDesc, &bufData, &m_vBuffer);
+//	if (FAILED(hr))
+//		return false;
+//
+//	// index buffer
+//	bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+//	bufDesc.ByteWidth = sizeof(DWORD) * m_numberOfIndices;
+//	bufData.pSysMem = &indices[0];
+//
+//	hr = m_device->CreateBuffer(&bufDesc, &bufData, &m_iBuffer);
+//	if (FAILED(hr))
+//		return false;
+//
+//	return true;
+//}
 
 void Renderer::renderFrame()
 {

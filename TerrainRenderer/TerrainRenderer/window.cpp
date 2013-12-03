@@ -44,7 +44,6 @@ bool Window::initialize()
 void Window::run()
 {
 	MSG msg;
-	int cnt = 0;
 	
 	ZeroMemory(&msg, sizeof(MSG));
 
@@ -61,7 +60,6 @@ void Window::run()
 		{
 			// RENDERING
 			m_renderer->renderFrame();
-			cnt++;
 		}
     }
 }
