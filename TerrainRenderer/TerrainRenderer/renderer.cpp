@@ -53,6 +53,17 @@ bool Renderer::initDX(HWND hWnd)
 
 	shader.init(m_device, m_deviceContext);
 
+	// Create instance of a camera
+	m_Camera = new Camera();
+	if(!m_Camera)
+		return false;
+	
+	// Create the projection matrix for 3D rendering.
+	D3DXMatrixPerspectiveFovLH(&m_projectionMatrix, (float)FOV, (float)WINDOW_WIDTH/(float)WINDOW_HEIGHT, (float)SCREEN_NEAR, (float)SCREEN_DEPTH);
+
+    // Initialize the world matrix to the identity matrix.
+    D3DXMatrixIdentity(&m_worldMatrix);
+
 	// draw a terrain (actually set vertex & index buffers :P)
 	Terrain terr = Terrain(m_device);
 	if (!terr.createVertices(&m_vBuffer, &m_numberOfVertices))
@@ -62,6 +73,16 @@ bool Renderer::initDX(HWND hWnd)
 
 	return true;
 }
+	
+/*
+void Renderer::GetProjectionMatrix(D3DXMATRIX& projMatrix) {
+	projMatrix = m_projectionMatrix;
+}
+void Renderer::GetWorldMatrix(D3DXMATRIX& worldMatrix) {
+	worldMatrix = m_worldMatrix;
+
+}
+*/
 
 //bool Renderer::drawFigure()
 //{
@@ -110,7 +131,7 @@ bool Renderer::initDX(HWND hWnd)
 //	return true;
 //}
 
-void Renderer::renderFrame()
+void Renderer::renderFrame(D3DXVECTOR3 m_move, D3DXVECTOR3 m_rotate)
 {
 	/*************** lol *****************/
 	static double cnt = 0;
@@ -123,6 +144,10 @@ void Renderer::renderFrame()
 		cnt -= 0.0001;
 	/************ end of lol ************/
 	m_deviceContext->ClearRenderTargetView(m_renderTargetView, D3DXCOLOR(cnt, cnt, 0.3, 1.0));
+
+	// move and rotate the camera
+	m_Camera->Move(m_move);
+	m_Camera->Rotate(m_rotate);
 
 	// configure Input Assembler stage
 	UINT stride = sizeof(Vertex_PosCol);
@@ -145,6 +170,8 @@ void Renderer::renderFrame()
 
 void Renderer::shutdown()
 {
+	if (m_Camera)
+		delete m_Camera;
 	if (m_swapChain)
 		m_swapChain->Release();
 	shader.release();

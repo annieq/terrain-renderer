@@ -2,9 +2,7 @@
 #define	SHADER_H
 
 //#include <D3Dcompiler.h>
-#include <D3DX11.h>
-#include <d3dx9math.h>
-#include <vector>
+#include "common.h"
 
 // A class for handling shaders
 class Shader

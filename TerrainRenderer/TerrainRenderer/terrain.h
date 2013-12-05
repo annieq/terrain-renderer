@@ -1,9 +1,8 @@
 #ifndef TERRAIN_H
 #define TERRAIN_H
 
-#include <d3d11.h>
+#include "common.h"
 #include "shader.h"
-#include <vector>
 
 class Terrain
 {

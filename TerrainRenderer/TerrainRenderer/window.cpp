@@ -7,6 +7,8 @@ bool Window::initialize()
 
 	ZeroMemory(&wc, sizeof(WNDCLASSEX));
 
+	ApplicationHandle = this;
+
 	// fill in the window structure
 	wc.cbSize = sizeof(WNDCLASSEX);
     wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -25,8 +27,8 @@ bool Window::initialize()
 						  //WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP /*| WS_MAXIMIZE */,    // window style - without frames
                           100,    // x-position of the window
                           100,    // y-position of the window
-                          800,    // width of the window
-                          600,    // height of the window
+                          WINDOW_WIDTH,    // width of the window
+						  WINDOW_HEIGHT,    // height of the window
                           NULL,    // we have no parent window, NULL
                           NULL,    // we aren't using menus, NULL
 						  GetModuleHandle(NULL),    // application handle
@@ -37,6 +39,12 @@ bool Window::initialize()
 	m_renderer = new Renderer();
 	if (!m_renderer->initDX(hWindow))
 		return false;
+
+	m_keys = new Keys();
+	if(!m_keys)
+		return false;
+
+	m_keys->Initialize();
 	
 	return true;
 }
@@ -58,15 +66,49 @@ void Window::run()
 		}
 		else
 		{
+			// Calculating camera moves
+			D3DXVECTOR3 move(0.0f,0.0f,0.0f);
+			D3DXVECTOR3 rotate(0.0f,0.0f,0.0f);
+			m_keys->checkMoveRotate(move, rotate);
+
 			// RENDERING
-			m_renderer->renderFrame();
+			m_renderer->renderFrame(move,rotate);
 		}
     }
 }
 
 void Window::shutdown()
 {
+	delete m_keys;
 	m_renderer->shutdown();
+}
+
+LRESULT CALLBACK Window::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+{
+	switch(umsg)
+	{
+		// Check if a key has been pressed on the keyboard.
+		case WM_KEYDOWN:
+		{
+			// If a key is pressed send it to the input object so it can record that state.
+			m_keys->KeyPressed((unsigned int)wparam);
+			return 0;
+		}
+
+		// Check if a key has been released on the keyboard.
+		case WM_KEYUP:
+		{
+			// If a key is released then send it to the input object so it can unset the state for that key.
+			m_keys->KeyReleased((unsigned int)wparam);
+			return 0;
+		}
+
+		// Any other messages send to the default message handler as our application won't make use of them.
+		default:
+		{
+			return DefWindowProc(hwnd, umsg, wparam, lparam);
+		}
+	}
 }
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -86,7 +128,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     }
 
     // Handle any messages the switch statement didn't
-    return DefWindowProc (hWnd, message, wParam, lParam);
+	return ApplicationHandle->MessageHandler (hWnd, message, wParam, lParam);
 
 	// zamiast tego returna - fcja do obs³ugi klawiszy
 }
