@@ -34,15 +34,15 @@ bool Keys::isKeyPressed(unsigned int key)
 
 void Keys::checkMoveRotate(D3DXVECTOR3& move, D3DXVECTOR3& rotate)
 {
-	move.x -= m_keyboardState[DIK_LEFTARROW] ? 1 : 0;
-	move.x += m_keyboardState[DIK_RIGHTARROW] ? 1 : 0;
-	move.y -= m_keyboardState[DIK_UPARROW] ? 1 : 0;
-	move.y += m_keyboardState[DIK_DOWNARROW] ? 1 : 0;
-	move.z += m_keyboardState[DIK_PGUP] ? 1 : 0;
-	move.z -= m_keyboardState[DIK_PGDN] ? 1 : 0;
+	move.x -= m_keyboardState[LEFTARROW] ? 1 : 0;
+	move.x += m_keyboardState[RIGHTARROW] ? 1 : 0;
+	move.y += m_keyboardState[UPARROW] ? 1 : 0;
+	move.y -= m_keyboardState[DOWNARROW] ? 1 : 0;
+	move.z += m_keyboardState[PGUP] ? 1 : 0;
+	move.z -= m_keyboardState[PGDN] ? 1 : 0;
 	
-	rotate.x += m_keyboardState[DIK_NUMPAD4] ? 1 : 0;
-	rotate.x -= m_keyboardState[DIK_NUMPAD6] ? 1 : 0;
-	rotate.y += m_keyboardState[DIK_NUMPAD8] ? 1 : 0;
-	rotate.y -= m_keyboardState[DIK_NUMPAD2] ? 1 : 0;
+	rotate.y -= m_keyboardState[NLEFTARROW] ? 1 : 0;
+	rotate.y += m_keyboardState[NRIGHTARROW] ? 1 : 0;
+	rotate.x -= m_keyboardState[NUPARROW] ? 1 : 0;
+	rotate.x += m_keyboardState[NDOWNARROW] ? 1 : 0;
 }

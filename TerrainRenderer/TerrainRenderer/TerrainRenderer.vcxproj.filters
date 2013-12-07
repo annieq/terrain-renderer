@@ -64,7 +64,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="verysimpleshaders.fx">
+    <None Include="geometry.fx">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="vertex.fx">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="pixel.fx">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

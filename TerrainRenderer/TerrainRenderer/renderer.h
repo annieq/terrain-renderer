@@ -32,10 +32,11 @@ private:
 	ID3D11Texture2D *m_backBuffer;
 	ID3D11RenderTargetView *m_renderTargetView;
 	D3D11_VIEWPORT m_viewport;
-	ID3D11Buffer *m_vBuffer, *m_iBuffer;
+	ID3D11Buffer *m_vBuffer, *m_iBuffer, *m_mBuffer;
 	
 	D3DXMATRIX m_projectionMatrix;
 	D3DXMATRIX m_worldMatrix;
+	D3DXMATRIX m_viewMatrix;
 
 	unsigned int m_numberOfVertices, m_numberOfIndices;
 
@@ -47,5 +48,12 @@ struct VERTEX
       FLOAT X, Y, Z;      // position
       D3DXCOLOR Color;    // color
 };
+
+
+typedef struct VS_CONSTANT_BUFFER
+{
+	D3DXMATRIX worldMatrix;
+	D3DXMATRIX viewProjMatrix;
+} VS_CONSTANT_BUFFER;
 
 #endif

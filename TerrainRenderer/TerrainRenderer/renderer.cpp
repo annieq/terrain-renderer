@@ -45,8 +45,8 @@ bool Renderer::initDX(HWND hWnd)
 
 	// viewport
 	ZeroMemory(&m_viewport, sizeof(D3D11_VIEWPORT));
-	m_viewport.Width = 800;
-	m_viewport.Height = 600;
+	m_viewport.Width = WINDOW_WIDTH;
+	m_viewport.Height = WINDOW_HEIGHT;
 	m_viewport.TopLeftX = 0.0;
 	m_viewport.TopLeftY = 0.0;
 	m_deviceContext->RSSetViewports(1, &m_viewport);
@@ -63,7 +63,7 @@ bool Renderer::initDX(HWND hWnd)
 
     // Initialize the world matrix to the identity matrix.
     D3DXMatrixIdentity(&m_worldMatrix);
-
+	
 	// draw a terrain (actually set vertex & index buffers :P)
 	Terrain terr = Terrain(m_device);
 	if (!terr.createVertices(&m_vBuffer, &m_numberOfVertices))
@@ -133,6 +133,7 @@ void Renderer::GetWorldMatrix(D3DXMATRIX& worldMatrix) {
 
 void Renderer::renderFrame(D3DXVECTOR3 m_move, D3DXVECTOR3 m_rotate)
 {
+	HRESULT hr;
 	/*************** lol *****************/
 	static double cnt = 0;
 	static bool dir = true;
@@ -148,6 +149,38 @@ void Renderer::renderFrame(D3DXVECTOR3 m_move, D3DXVECTOR3 m_rotate)
 	// move and rotate the camera
 	m_Camera->Move(m_move);
 	m_Camera->Rotate(m_rotate);
+
+	
+	// Create Constant Buffers and send world and viewprojection matrix through it
+	VS_CONSTANT_BUFFER m_mConstData;
+
+	m_mConstData.worldMatrix = m_worldMatrix;
+	m_Camera->GetViewMatrix(m_viewMatrix);
+	D3DXMatrixMultiply(&(m_mConstData.viewProjMatrix), &m_viewMatrix, &m_projectionMatrix);
+
+	// Fill in a buffer description.
+	D3D11_BUFFER_DESC cbDesc;
+	cbDesc.ByteWidth = sizeof( VS_CONSTANT_BUFFER );
+	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
+	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbDesc.MiscFlags = 0;
+	cbDesc.StructureByteStride = 0;
+
+	// Fill in the subresource data.
+	D3D11_SUBRESOURCE_DATA InitData;
+	InitData.pSysMem = &m_mConstData;
+	InitData.SysMemPitch = 0;
+	InitData.SysMemSlicePitch = 0;
+
+	// Create the buffer. (TU BY TRZEBA ZWRACAC HR)
+	hr = m_device->CreateBuffer( &cbDesc, &InitData, &m_mBuffer );
+
+
+	// Set the buffer.
+	m_deviceContext->VSSetConstantBuffers( 0, 1, &m_mBuffer );
+
+
 
 	// configure Input Assembler stage
 	UINT stride = sizeof(Vertex_PosCol);

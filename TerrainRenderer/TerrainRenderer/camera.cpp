@@ -4,7 +4,7 @@ Camera::Camera()
 {
 	m_position.x = 0.0f;
 	m_position.y = 0.0f;
-	m_position.z = 0.0f;
+	m_position.z = -5.0f;
 			  
 	m_rotation.x = 0.0f;
 	m_rotation.y = 0.0f;
