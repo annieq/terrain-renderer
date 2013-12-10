@@ -24,7 +24,7 @@ private:
 	//bool drawFigure();
 
 private:
-	Camera *m_Camera;
+	Camera *m_camera;
 
 	IDXGISwapChain *m_swapChain;
 	ID3D11Device *m_device;
@@ -40,7 +40,7 @@ private:
 
 	unsigned int m_numberOfVertices, m_numberOfIndices;
 
-	Shader shader;
+	Shader m_shader;
 };
 
 struct VERTEX

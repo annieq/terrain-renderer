@@ -4,6 +4,9 @@
 #include "common.h"
 #include "shader.h"
 
+#define ROWS 16
+#define COLS 16
+
 class Terrain
 {
 public:

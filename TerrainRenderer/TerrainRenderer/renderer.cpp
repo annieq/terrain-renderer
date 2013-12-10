@@ -51,11 +51,11 @@ bool Renderer::initDX(HWND hWnd)
 	m_viewport.TopLeftY = 0.0;
 	m_deviceContext->RSSetViewports(1, &m_viewport);
 
-	shader.init(m_device, m_deviceContext);
+	m_shader.init(m_device, m_deviceContext);
 
 	// Create instance of a camera
-	m_Camera = new Camera();
-	if(!m_Camera)
+	m_camera = new Camera();
+	if(!m_camera)
 		return false;
 	
 	// Create the projection matrix for 3D rendering.
@@ -84,79 +84,22 @@ void Renderer::GetWorldMatrix(D3DXMATRIX& worldMatrix) {
 }
 */
 
-//bool Renderer::drawFigure()
-//{
-//	HRESULT hr;
-//
-//	std::vector<Vertex_PosCol> vertices;
-//	std::vector<WORD> indices;
-//
-//	vertices.push_back(Vertex_PosCol(+0.5, +0.5, 0.0, D3DXCOLOR(1.0, 0.0, 1.0, 1.0) ));
-//	vertices.push_back(Vertex_PosCol(-0.5, -0.5, 0.0, D3DXCOLOR(1.0, 1.0, 1.0, 1.0) ));
-//	vertices.push_back(Vertex_PosCol(-0.5, +0.5, 0.0, D3DXCOLOR(1.0, 1.0, 1.0, 1.0) ));
-//	vertices.push_back(Vertex_PosCol(+0.5, -0.5, 0.0, D3DXCOLOR(0.0, 0.0, 0.0, 1.0) ));
-//	m_numberOfVertices = vertices.size();
-//
-//	indices.push_back(0);
-//	indices.push_back(1);
-//	indices.push_back(2);
-//	indices.push_back(0);
-//	indices.push_back(3);
-//	indices.push_back(1);
-//	m_numberOfIndices = indices.size();
-//
-//	// vertex buffer
-//	D3D11_BUFFER_DESC bufDesc = D3D11_BUFFER_DESC();
-//	bufDesc.Usage = D3D11_USAGE_DEFAULT;
-//	bufDesc.ByteWidth = sizeof(Vertex_PosCol) * m_numberOfVertices;
-//	bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-//	bufDesc.CPUAccessFlags = 0;
-//
-//	D3D11_SUBRESOURCE_DATA bufData = D3D11_SUBRESOURCE_DATA();
-//	bufData.pSysMem = &vertices[0];
-//
-//	hr = m_device->CreateBuffer(&bufDesc, &bufData, &m_vBuffer);
-//	if (FAILED(hr))
-//		return false;
-//
-//	// index buffer
-//	bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-//	bufDesc.ByteWidth = sizeof(DWORD) * m_numberOfIndices;
-//	bufData.pSysMem = &indices[0];
-//
-//	hr = m_device->CreateBuffer(&bufDesc, &bufData, &m_iBuffer);
-//	if (FAILED(hr))
-//		return false;
-//
-//	return true;
-//}
-
-void Renderer::renderFrame(D3DXVECTOR3 m_move, D3DXVECTOR3 m_rotate)
+void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate)
 {
 	HRESULT hr;
-	/*************** lol *****************/
-	static double cnt = 0;
-	static bool dir = true;
-	if (cnt > 1.0 || cnt < 0.0)
-		dir = !dir;
-	if (dir)
-		cnt += 0.0001;
-	else
-		cnt -= 0.0001;
-	/************ end of lol ************/
-	m_deviceContext->ClearRenderTargetView(m_renderTargetView, D3DXCOLOR(cnt, cnt, 0.3, 1.0));
+
+	m_deviceContext->ClearRenderTargetView(m_renderTargetView, D3DXCOLOR(0.01, 0.01, 0.01, 1.0));
 
 	// move and rotate the camera
-	m_Camera->Move(m_move);
-	m_Camera->Rotate(m_rotate);
-
+	m_camera->Move(move);
+	m_camera->Rotate(rotate);
 	
 	// Create Constant Buffers and send world and viewprojection matrix through it
-	VS_CONSTANT_BUFFER m_mConstData;
+	VS_CONSTANT_BUFFER mConstData;
 
-	m_mConstData.worldMatrix = m_worldMatrix;
-	m_Camera->GetViewMatrix(m_viewMatrix);
-	D3DXMatrixMultiply(&(m_mConstData.viewProjMatrix), &m_viewMatrix, &m_projectionMatrix);
+	mConstData.worldMatrix = m_worldMatrix;
+	m_camera->GetViewMatrix(m_viewMatrix);
+	D3DXMatrixMultiply(&(mConstData.viewProjMatrix), &m_viewMatrix, &m_projectionMatrix);
 
 	// Fill in a buffer description.
 	D3D11_BUFFER_DESC cbDesc;
@@ -169,7 +112,7 @@ void Renderer::renderFrame(D3DXVECTOR3 m_move, D3DXVECTOR3 m_rotate)
 
 	// Fill in the subresource data.
 	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = &m_mConstData;
+	InitData.pSysMem = &mConstData;
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
 
@@ -203,11 +146,11 @@ void Renderer::renderFrame(D3DXVECTOR3 m_move, D3DXVECTOR3 m_rotate)
 
 void Renderer::shutdown()
 {
-	if (m_Camera)
-		delete m_Camera;
+	if (m_camera)
+		delete m_camera;
 	if (m_swapChain)
 		m_swapChain->Release();
-	shader.release();
+	m_shader.release();
 	if (m_renderTargetView)
 		m_renderTargetView->Release();
 	if (m_device)
