@@ -22,7 +22,7 @@ bool Window::initialize()
 
 	hWindow = CreateWindowEx(NULL,
                           L"WindowClass",    // name of the window class
-                          L"Terrain Renderer v. 1.0",   // title of the window
+                          LPCWSTR(TEXT(APPTITLE)),   // title of the window
 						  WS_OVERLAPPEDWINDOW,	// window style
 						  //WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP /*| WS_MAXIMIZE */,    // window style - without frames
                           100,    // x-position of the window

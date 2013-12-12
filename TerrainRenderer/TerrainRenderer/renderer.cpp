@@ -71,6 +71,14 @@ bool Renderer::initDX(HWND hWnd)
 	if (!terr.createIndices(&m_iBuffer, &m_numberOfIndices))
 		return false;
 
+	
+	hr = FW1CreateFactory(FW1_VERSION, &m_FW1Factory);
+	if (FAILED(hr))
+		return false;
+	hr = m_FW1Factory->CreateFontWrapper(m_device, L"Arial", &m_FontWrapper);
+	if (FAILED(hr))
+		return false;
+
 	return true;
 }
 	
@@ -140,6 +148,30 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate)
 		else
 			m_deviceContext->Draw(m_numberOfVertices, 0);
 	}
+	
+
+	// prepare the text to draw
+	std::wstringstream oss;
+	D3DXVECTOR3 cpos, crot;
+	cpos = m_camera->GetPosition();
+	crot = m_camera->GetRotation();
+	oss << APPTITLE << std::endl;
+	oss << "Pozycja kamery: x=" << cpos.x << " y=" << cpos.y << " z=" << cpos.z << std:: endl;
+	oss << "Obrót kamery: x=" << crot.x << " y=" << crot.y << " z=" << crot.z << std:: endl;
+	oss << "Klawisze: \nStrzalki - ruch kamery :: PageUp/Down - zblizenie/oddalenie :: NUM2/4/6/8 - obrót kamery";
+
+	std::wstring text = oss.str();
+
+	m_FontWrapper->DrawString(
+		m_deviceContext,
+		LPCTSTR(text.c_str()),// String
+		14.0f,// Font size
+		10.0f,// X position
+		10.0f,// Y position
+		0xffeeeeee,// Text color, 0xAaBbGgRr
+		FW1_RESTORESTATE // Flags (for example FW1_RESTORESTATE to keep context states unchanged)
+	);
+
 
 	m_swapChain->Present(0, 0);
 }

@@ -12,8 +12,13 @@
 #include <D3DX11.h>
 #include <d3dx10math.h>
 #include <vector>
+#include <sstream>
+#include <string.h>
 #include <assert.h>
 
+#include "FW1FontWrapper.h"
+
+#define APPTITLE "Terrain renderer v1.0"
 // sta³e:
 #define RADIANS_PER_DEGREES  0.0174532925f
 

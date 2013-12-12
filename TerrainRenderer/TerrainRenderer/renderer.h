@@ -26,6 +26,9 @@ private:
 private:
 	Camera *m_camera;
 
+	IFW1Factory *m_FW1Factory;
+	IFW1FontWrapper *m_FontWrapper;
+
 	IDXGISwapChain *m_swapChain;
 	ID3D11Device *m_device;
 	ID3D11DeviceContext *m_deviceContext;
