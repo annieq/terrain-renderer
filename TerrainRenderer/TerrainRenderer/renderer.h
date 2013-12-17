@@ -21,7 +21,7 @@ public:
 	*/
 
 private:
-	//bool drawFigure();
+	bool createRasterizerState();
 
 private:
 	Camera *m_camera;
@@ -34,16 +34,18 @@ private:
 	ID3D11DeviceContext *m_deviceContext;
 	ID3D11Texture2D *m_backBuffer;
 	ID3D11RenderTargetView *m_renderTargetView;
-	D3D11_VIEWPORT m_viewport;
 	ID3D11Buffer *m_vBuffer, *m_iBuffer, *m_mBuffer;
+	ID3D11RasterizerState *m_rastSolid, *m_rastWire;
 	
+	D3D11_VIEWPORT m_viewport;
+	Shader m_shader;
+
 	D3DXMATRIX m_projectionMatrix;
 	D3DXMATRIX m_worldMatrix;
 	D3DXMATRIX m_viewMatrix;
 
 	unsigned int m_numberOfVertices, m_numberOfIndices;
 
-	Shader m_shader;
 };
 
 struct VERTEX

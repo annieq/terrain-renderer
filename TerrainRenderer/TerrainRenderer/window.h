@@ -8,6 +8,7 @@
 class Window
 {
 public:
+	Window();
 	bool initialize();
 	void run();
 	void shutdown();

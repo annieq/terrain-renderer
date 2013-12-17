@@ -1,5 +1,10 @@
 #include "shader.h"
 
+Shader::Shader()
+	: m_vShader(NULL), m_gShader(NULL), m_pShader(NULL), m_inputLayout(NULL)
+{
+}
+
 void Shader::init(ID3D11Device *dev, ID3D11DeviceContext *devContext)
 {
 	ID3D10Blob *vsBlob, *psBlob; //, *gsBlob;

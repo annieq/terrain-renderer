@@ -1,5 +1,10 @@
 #include "window.h"
 
+Window::Window()
+	: m_keys(NULL), m_renderer(NULL)
+{
+}
+
 bool Window::initialize()
 {
 	HWND hWindow;
@@ -79,7 +84,8 @@ void Window::run()
 
 void Window::shutdown()
 {
-	delete m_keys;
+	if (m_keys != NULL)
+		delete m_keys;
 	m_renderer->shutdown();
 }
 

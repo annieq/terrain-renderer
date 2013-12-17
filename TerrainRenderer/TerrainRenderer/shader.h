@@ -8,6 +8,7 @@
 class Shader
 {
 public:
+	Shader();
 	void init(ID3D11Device *dev, ID3D11DeviceContext *devContext);
 	void release();
 

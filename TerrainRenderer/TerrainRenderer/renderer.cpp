@@ -5,6 +5,17 @@ Renderer::Renderer()
 	m_swapChain = 0;
 	m_device = 0;
 	m_deviceContext = 0;
+	m_camera = 0;
+
+	m_FW1Factory = 0;
+	m_FontWrapper = 0;
+
+	m_backBuffer = 0;
+	m_renderTargetView = 0;
+	m_vBuffer = m_iBuffer = m_mBuffer = 0;
+	m_rastSolid = m_rastWire = 0;
+
+	m_shader = Shader();
 }
 
 bool Renderer::initDX(HWND hWnd)
@@ -43,6 +54,10 @@ bool Renderer::initDX(HWND hWnd)
 
 	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, NULL);
 
+	// rasterizer state
+	if (!createRasterizerState())
+		return false;
+
 	// viewport
 	ZeroMemory(&m_viewport, sizeof(D3D11_VIEWPORT));
 	m_viewport.Width = WINDOW_WIDTH;
@@ -78,6 +93,43 @@ bool Renderer::initDX(HWND hWnd)
 	hr = m_FW1Factory->CreateFontWrapper(m_device, L"Arial", &m_FontWrapper);
 	if (FAILED(hr))
 		return false;
+
+	return true;
+}
+
+bool Renderer::createRasterizerState()
+{
+	HRESULT hr;
+	D3D11_RASTERIZER_DESC rastDesc;			//struct used to initialize the rasterizer state
+
+	//define the rasterizer state object config
+	rastDesc = D3D11_RASTERIZER_DESC();		//reset struct
+	
+	rastDesc.AntialiasedLineEnable = false;
+	rastDesc.CullMode = D3D11_CULL_BACK;		//use D3D11_CULL_BACK/FRONT to actually do any "backface" culling
+	rastDesc.DepthBias = 0;
+	rastDesc.DepthBiasClamp = 0.0f;
+	rastDesc.DepthClipEnable = true;
+	rastDesc.FillMode = D3D11_FILL_SOLID;
+	rastDesc.FrontCounterClockwise = false;
+	rastDesc.MultisampleEnable = false;
+	rastDesc.ScissorEnable = false;
+	rastDesc.SlopeScaledDepthBias = 0.0f;
+
+	//create the rasterizer state object
+	hr = m_device->CreateRasterizerState(&rastDesc, &m_rastSolid);
+	if (FAILED(hr))
+		return false;
+
+	//modify the fill mode only
+	rastDesc.FillMode = D3D11_FILL_WIREFRAME;
+
+	//create the rasterizer state object (wireframe)
+	hr = m_device->CreateRasterizerState(&rastDesc, &m_rastWire);
+	if (FAILED(hr))
+		return false;
+
+	m_deviceContext->RSSetState(m_rastWire);
 
 	return true;
 }
