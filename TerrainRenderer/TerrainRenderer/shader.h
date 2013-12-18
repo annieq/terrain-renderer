@@ -1,7 +1,6 @@
 #ifndef SHADER_H
 #define	SHADER_H
 
-//#include <D3Dcompiler.h>
 #include "common.h"
 
 // A class for handling shaders

@@ -2,6 +2,27 @@
 
 #include "common.h"
 
+#define LEFTARROW 37
+#define UPARROW 38
+#define RIGHTARROW 39
+#define DOWNARROW 40
+
+#define NDOWNARROW 98
+#define NLEFTARROW 100
+#define NRIGHTARROW 102
+#define NUPARROW 104
+
+#define PGUP 33
+#define PGDN 34
+
+#define F1 112
+// #define F2 113
+// #define F3 114
+// ....
+// #define F12 123
+
+// #define ESC 27
+
 class Keys {
 public:
 	Keys();

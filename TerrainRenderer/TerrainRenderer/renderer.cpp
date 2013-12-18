@@ -16,6 +16,7 @@ Renderer::Renderer()
 	m_rastSolid = m_rastWire = 0;
 
 	m_shader = Shader();
+	m_wireframe = false;
 }
 
 bool Renderer::initDX(HWND hWnd)
@@ -129,7 +130,7 @@ bool Renderer::createRasterizerState()
 	if (FAILED(hr))
 		return false;
 
-	m_deviceContext->RSSetState(m_rastWire);
+	m_deviceContext->RSSetState(m_rastSolid);
 
 	return true;
 }
@@ -191,6 +192,8 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate)
 	m_deviceContext->IASetVertexBuffers(0, 1, &m_vBuffer, &stride, &offset);
 	m_deviceContext->IASetIndexBuffer(m_iBuffer, DXGI_FORMAT_R16_UINT, 0);
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	
+	m_deviceContext->RSSetState(m_wireframe ? m_rastWire : m_rastSolid);
 
 	// draw vertices
 	if (m_numberOfVertices)
@@ -210,7 +213,8 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate)
 	oss << APPTITLE << std::endl;
 	oss << "Pozycja kamery: x=" << cpos.x << " y=" << cpos.y << " z=" << cpos.z << std:: endl;
 	oss << "Obrót kamery: x=" << crot.x << " y=" << crot.y << " z=" << crot.z << std:: endl;
-	oss << "Klawisze: \nStrzalki - ruch kamery :: PageUp/Down - zblizenie/oddalenie :: NUM2/4/6/8 - obrót kamery";
+	oss << "Klawisze: \nStrzalki - ruch kamery :: PageUp/Down - zblizenie/oddalenie :: NUM2/4/6/8 - obrót kamery" << std:: endl;
+	oss << "F1 - tryb wireframe" << std::endl;
 
 	std::wstring text = oss.str();
 
@@ -226,6 +230,11 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate)
 
 
 	m_swapChain->Present(0, 0);
+}
+
+void Renderer::changeWireframe()
+{
+	m_wireframe = !m_wireframe;
 }
 
 void Renderer::shutdown()

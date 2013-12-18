@@ -31,17 +31,4 @@
 #define SCREEN_NEAR 0.1f
 #define SCREEN_DEPTH 1000.0f
 
-#define LEFTARROW 37
-#define UPARROW 38
-#define RIGHTARROW 39
-#define DOWNARROW 40
-
-#define NDOWNARROW 98
-#define NLEFTARROW 100
-#define NRIGHTARROW 102
-#define NUPARROW 104
-
-#define PGUP 33
-#define PGDN 34
-
 #endif

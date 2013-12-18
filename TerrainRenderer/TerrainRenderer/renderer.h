@@ -14,6 +14,7 @@ public:
 	bool initDX(HWND);
 	void renderFrame(D3DXVECTOR3,D3DXVECTOR3);
 	void shutdown();
+	void changeWireframe();
 	/*
 	MO¯E BYC NIEPOTRZEBNE - U¯YWAMY TO W TEJ SAMEJ KLASIE
 	void GetProjectionMatrix(D3DXMATRIX&);
@@ -45,6 +46,7 @@ private:
 	D3DXMATRIX m_viewMatrix;
 
 	unsigned int m_numberOfVertices, m_numberOfIndices;
+	bool m_wireframe;
 
 };
 

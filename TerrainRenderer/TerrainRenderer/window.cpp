@@ -98,6 +98,8 @@ LRESULT CALLBACK Window::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 		{
 			// If a key is pressed send it to the input object so it can record that state.
 			m_keys->KeyPressed((unsigned int)wparam);
+			if (wparam == F1)
+				m_renderer->changeWireframe();
 			return 0;
 		}
 
@@ -135,6 +137,4 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 
     // Handle any messages the switch statement didn't
 	return ApplicationHandle->MessageHandler (hWnd, message, wParam, lParam);
-
-	// zamiast tego returna - fcja do obs³ugi klawiszy
 }
