@@ -7,6 +7,9 @@
 #define ROWS 16
 #define COLS 16
 
+#define TERR_WIDTH 100
+#define TERR_HEIGHT 100
+
 class Terrain
 {
 public:

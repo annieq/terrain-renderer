@@ -149,7 +149,7 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate)
 {
 	HRESULT hr;
 
-	m_deviceContext->ClearRenderTargetView(m_renderTargetView, D3DXCOLOR(0.01, 0.01, 0.01, 1.0));
+	m_deviceContext->ClearRenderTargetView(m_renderTargetView, D3DXCOLOR(0.01f, 0.01f, 0.01f, 1.0f));
 
 	// move and rotate the camera
 	m_camera->Move(move);

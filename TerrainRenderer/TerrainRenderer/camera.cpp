@@ -3,7 +3,7 @@
 Camera::Camera() 
 {
 	m_position.x = 0.0f;
-	m_position.y = 1.0f;
+	m_position.y = 7.0f;
 	m_position.z = -5.0f;
 			  
 	m_rotation.x = 10.0f;

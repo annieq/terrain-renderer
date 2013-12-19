@@ -10,9 +10,10 @@ bool Terrain::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices
 	HRESULT hr;
 	std::vector<Vertex_PosCol> vertices;
 
-	float rowCnt = -1.0, colCnt = -1.0;
-	float rowStep = 2.0/(float)ROWS;
-	float colStep = 2.0/(float)COLS;
+	float rowCnt = -TERR_WIDTH,
+		colCnt = -TERR_HEIGHT;
+	float rowStep = 2.0 * (float)TERR_WIDTH/(float)ROWS;
+	float colStep = 2.0 * (float)TERR_HEIGHT/(float)COLS;
 	for (int i = 0; i < ROWS; ++i)
 	{
 		for (int j = 0; j < COLS; ++j)
@@ -20,7 +21,7 @@ bool Terrain::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices
 			vertices.push_back(Vertex_PosCol(rowCnt, -0.5, colCnt, D3DXCOLOR(i%2,i%2,j%2,1.0) ));
 			colCnt += colStep;
 		}
-		colCnt = -1.0;
+		colCnt = -TERR_HEIGHT;
 		rowCnt += rowStep;
 	}
 	*numOfVertices = vertices.size();
