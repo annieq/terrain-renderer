@@ -1,5 +1,17 @@
 #include "renderer.h"
 
+long long milliseconds_now() {
+    static LARGE_INTEGER s_frequency;
+    static BOOL s_use_qpc = QueryPerformanceFrequency(&s_frequency);
+    if (s_use_qpc) {
+        LARGE_INTEGER now;
+        QueryPerformanceCounter(&now);
+        return (1000LL * now.QuadPart) / s_frequency.QuadPart;
+    } else {
+        return GetTickCount();
+    }
+}
+
 Renderer::Renderer()
 {
 	m_swapChain = 0;
@@ -17,6 +29,7 @@ Renderer::Renderer()
 
 	m_shader = Shader();
 	m_wireframe = false;
+	next_game_tick = GetTickCount();	// init next frame time for "now"
 }
 
 bool Renderer::initDX(HWND hWnd)
@@ -147,6 +160,7 @@ void Renderer::GetWorldMatrix(D3DXMATRIX& worldMatrix) {
 
 void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate)
 {
+	int sleep_time = 0;
 	HRESULT hr;
 
 	m_deviceContext->ClearRenderTargetView(m_renderTargetView, D3DXCOLOR(0.01f, 0.01f, 0.01f, 1.0f));
@@ -228,8 +242,14 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate)
 		FW1_RESTORESTATE // Flags (for example FW1_RESTORESTATE to keep context states unchanged)
 	);
 
-
 	m_swapChain->Present(0, 0);
+	
+	// FPS Limiter
+	next_game_tick += SKIP_TICKS;
+	sleep_time = next_game_tick - GetTickCount();
+	if( sleep_time >= 0 ) {
+            Sleep( sleep_time );
+    }
 }
 
 void Renderer::changeWireframe()
@@ -251,3 +271,4 @@ void Renderer::shutdown()
 	if (m_deviceContext)
 		m_deviceContext->Release();
 }
+

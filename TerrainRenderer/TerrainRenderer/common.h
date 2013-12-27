@@ -22,13 +22,16 @@
 // sta³e:
 #define RADIANS_PER_DEGREES  0.0174532925f
 
-#define CAM_MOVE 0.005f	// pojedynczy krok ruchu kamery (PRZYDA£BY SIÊ OGRANICZNIK FPS)
-#define CAM_ROTATE 0.05f	// pojedynczy obrót kamery w stopniach
+#define CAM_MOVE 0.2f	// pojedynczy krok ruchu kamery (PRZYDA£BY SIÊ OGRANICZNIK FPS)
+#define CAM_ROTATE 0.5f	// pojedynczy obrót kamery w stopniach
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 #define FOV (D3DX_PI/4.0f) // field of view
 
 #define SCREEN_NEAR 0.1f
 #define SCREEN_DEPTH 1000.0f
+
+#define FRAMES_PER_SECOND 50
+#define SKIP_TICKS (1000 / FRAMES_PER_SECOND)
 
 #endif

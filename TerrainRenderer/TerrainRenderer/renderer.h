@@ -48,6 +48,7 @@ private:
 	unsigned int m_numberOfVertices, m_numberOfIndices;
 	bool m_wireframe;
 
+	DWORD next_game_tick;	// time for next frame in ms
 };
 
 struct VERTEX
