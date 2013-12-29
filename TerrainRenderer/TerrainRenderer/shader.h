@@ -8,7 +8,7 @@ class Shader
 {
 public:
 	Shader();
-	void init(ID3D11Device *dev, ID3D11DeviceContext *devContext);
+	void init(ID3D11Device *dev, ID3D11DeviceContext *devContext, ID3D11ShaderResourceView *texture, ID3D11SamplerState *sampleState);
 	void release();
 
 private:
@@ -19,7 +19,7 @@ private:
 };
 
 
-// vertex type
+// old vertex type (only color)
 struct Vertex_PosCol
 {
 	float x, y, z;
@@ -41,5 +41,28 @@ struct Vertex_PosCol
 	{
 	}
 };
+
+// vertex type with texture
+struct Vertex_PosTex
+{
+	float x, y, z;
+	float u, v;
+
+	Vertex_PosTex() 
+		: x(0), y(0), z(0), u(0), v(0)
+	{
+	}
+
+	Vertex_PosTex(float xx, float yy, float zz)
+		: x(xx), y(yy), z(zz), u(0), v(0)
+	{
+	}
+
+	Vertex_PosTex(float xx, float yy, float zz, float uu, float vv) 
+		: x(xx), y(yy), z(zz), u(uu), v(vv)
+	{
+	}
+};
+
 
 #endif

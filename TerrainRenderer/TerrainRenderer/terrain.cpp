@@ -8,7 +8,7 @@ Terrain::Terrain(ID3D11Device *dev)
 bool Terrain::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices)
 {
 	HRESULT hr;
-	std::vector<Vertex_PosCol> vertices;
+	std::vector<Vertex_PosTex> vertices;
 
 	float rowCnt = -TERR_WIDTH,
 		colCnt = -TERR_HEIGHT;
@@ -18,18 +18,23 @@ bool Terrain::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices
 	{
 		for (int j = 0; j < COLS; ++j)
 		{
-			vertices.push_back(Vertex_PosCol(rowCnt, -0.5, colCnt, D3DXCOLOR(i%2,i%2,j%2,1.0) ));
+			//vertices.push_back(Vertex_PosCol(rowCnt, -0.5, colCnt, D3DXCOLOR(i%2,i%2,j%2,1.0) ));
+			vertices.push_back(Vertex_PosTex(rowCnt, -0.5, colCnt, i%2, j%2));
 			colCnt += colStep;
 		}
 		colCnt = -TERR_HEIGHT;
 		rowCnt += rowStep;
 	}
+	//vertices.push_back(Vertex_PosTex(0, -0.5, 0, 0.0, 1.0));
+	//vertices.push_back(Vertex_PosTex(0, -0.5, TERR_HEIGHT, 1.0, 1.0));
+	//vertices.push_back(Vertex_PosTex(TERR_WIDTH, -0.5, TERR_HEIGHT, 1.0, 0.0));
+	//vertices.push_back(Vertex_PosTex(TERR_WIDTH, -0.5, 0, 0.0, 0.0));
 	*numOfVertices = vertices.size();
 
 	// vertex buffer
 	D3D11_BUFFER_DESC bufDesc = D3D11_BUFFER_DESC();
 	bufDesc.Usage = D3D11_USAGE_DEFAULT;
-	bufDesc.ByteWidth = sizeof(Vertex_PosCol) * (*numOfVertices);
+	bufDesc.ByteWidth = sizeof(Vertex_PosTex) * (*numOfVertices);
 	bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufDesc.CPUAccessFlags = 0;
 
@@ -59,6 +64,12 @@ bool Terrain::createIndices(ID3D11Buffer **iBuffer, unsigned int *numOfIndices)
 			indices.push_back((i+1)*COLS	+ j+1);
 			indices.push_back((i+1)*COLS	+ j);
 		}
+	//indices.push_back(0);
+	//indices.push_back(1);
+	//indices.push_back(2);
+	//indices.push_back(2);
+	//indices.push_back(3);
+	//indices.push_back(0);
 	*numOfIndices = indices.size();
 	
 	// index buffer

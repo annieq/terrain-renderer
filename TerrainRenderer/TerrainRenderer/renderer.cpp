@@ -14,6 +14,8 @@ Renderer::Renderer()
 	m_renderTargetView = 0;
 	m_vBuffer = m_iBuffer = m_mBuffer = 0;
 	m_rastSolid = m_rastWire = 0;
+	m_samplerState = 0;
+	m_texture = 0;
 
 	m_shader = Shader();
 	m_wireframe = false;
@@ -67,8 +69,10 @@ bool Renderer::initDX(HWND hWnd)
 	m_viewport.TopLeftX = 0.0;
 	m_viewport.TopLeftY = 0.0;
 	m_deviceContext->RSSetViewports(1, &m_viewport);
-
-	m_shader.init(m_device, m_deviceContext);
+	
+	if (!prepareTextures())
+		return false;
+	m_shader.init(m_device, m_deviceContext, m_texture, m_samplerState);
 
 	// Create instance of a camera
 	m_camera = new Camera();
@@ -87,12 +91,43 @@ bool Renderer::initDX(HWND hWnd)
 		return false;
 	if (!terr.createIndices(&m_iBuffer, &m_numberOfIndices))
 		return false;
-
 	
 	hr = FW1CreateFactory(FW1_VERSION, &m_FW1Factory);
 	if (FAILED(hr))
 		return false;
 	hr = m_FW1Factory->CreateFontWrapper(m_device, L"Arial", &m_FontWrapper);
+	if (FAILED(hr))
+		return false;
+
+	return true;
+}
+
+bool Renderer::prepareTextures()
+{
+	HRESULT hr;
+	// prepare texture(s)
+	D3D11_SAMPLER_DESC samplerDesc = D3D11_SAMPLER_DESC();
+
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	samplerDesc.BorderColor[0] = 0;
+	samplerDesc.BorderColor[1] = 0;
+	samplerDesc.BorderColor[2] = 0;
+	samplerDesc.BorderColor[3] = 0;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	
+	// Create the texture sampler state.
+	hr = m_device->CreateSamplerState(&samplerDesc, &m_samplerState);
+	if(FAILED(hr))
+		return false;
+
+	hr = D3DX11CreateShaderResourceViewFromFile(m_device, L"../TerrainRenderer/resources/tex2.png", NULL, NULL, &m_texture, NULL);
 	if (FAILED(hr))
 		return false;
 
@@ -189,7 +224,7 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate)
 
 
 	// configure Input Assembler stage
-	UINT stride = sizeof(Vertex_PosCol);
+	UINT stride = sizeof(Vertex_PosTex);
 	UINT offset = 0;
 	m_deviceContext->IASetVertexBuffers(0, 1, &m_vBuffer, &stride, &offset);
 	m_deviceContext->IASetIndexBuffer(m_iBuffer, DXGI_FORMAT_R16_UINT, 0);
@@ -249,11 +284,32 @@ void Renderer::shutdown()
 {
 	if (m_camera)
 		delete m_camera;
+	m_shader.release();
+
 	if (m_swapChain)
 		m_swapChain->Release();
-	m_shader.release();
 	if (m_renderTargetView)
 		m_renderTargetView->Release();
+	if (m_backBuffer)
+		m_backBuffer->Release();
+	if (m_FW1Factory)
+		m_FW1Factory->Release();
+	if (m_FontWrapper)
+		m_FontWrapper->Release();
+	if (m_vBuffer)
+		m_vBuffer->Release();
+	if (m_iBuffer)
+		m_iBuffer->Release();
+	if (m_mBuffer)
+		m_mBuffer->Release();
+	if (m_rastSolid)
+		m_rastSolid->Release();
+	if (m_rastWire)
+		m_rastWire->Release();
+	if (m_samplerState)
+		m_samplerState->Release();
+	if (m_texture)
+		m_texture->Release();
 	if (m_device)
 		m_device->Release();
 	if (m_deviceContext)

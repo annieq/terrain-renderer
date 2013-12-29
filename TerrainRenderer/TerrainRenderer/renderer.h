@@ -23,6 +23,7 @@ public:
 
 private:
 	bool createRasterizerState();
+	bool prepareTextures();
 
 private:
 	Camera *m_camera;
@@ -37,6 +38,8 @@ private:
 	ID3D11RenderTargetView *m_renderTargetView;
 	ID3D11Buffer *m_vBuffer, *m_iBuffer, *m_mBuffer;
 	ID3D11RasterizerState *m_rastSolid, *m_rastWire;
+	ID3D11SamplerState *m_samplerState;
+	ID3D11ShaderResourceView *m_texture;
 	
 	D3D11_VIEWPORT m_viewport;
 	Shader m_shader;
@@ -50,13 +53,6 @@ private:
 
 	DWORD m_NextGameTick;	// time for next frame in ms
 };
-
-struct VERTEX
-{
-      FLOAT X, Y, Z;      // position
-      D3DXCOLOR Color;    // color
-};
-
 
 typedef struct VS_CONSTANT_BUFFER
 {

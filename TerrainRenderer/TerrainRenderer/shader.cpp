@@ -5,13 +5,12 @@ Shader::Shader()
 {
 }
 
-void Shader::init(ID3D11Device *dev, ID3D11DeviceContext *devContext)
+void Shader::init(ID3D11Device *dev, ID3D11DeviceContext *devContext, ID3D11ShaderResourceView *texture, ID3D11SamplerState *sampleState)
 {
 	ID3D10Blob *vsBlob, *psBlob; //, *gsBlob;
 	D3DX11CompileFromFile(L"../TerrainRenderer/vertex.fx", NULL, NULL, "VShader", "vs_5_0", NULL, NULL, NULL, &vsBlob, NULL, NULL);
 	//D3DX11CompileFromFile(L"../TerrainRenderer/geometry.fx",	NULL, NULL, "GShader", "gs_5_0", NULL, NULL, NULL, &gsBlob, NULL, NULL);
 	D3DX11CompileFromFile(L"../TerrainRenderer/pixel.fx", NULL, NULL, "PShader", "ps_5_0", NULL, NULL, NULL, &psBlob, NULL, NULL);
-
 
 	// vertex shader
 	dev->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), NULL, &m_vShader);
@@ -24,14 +23,16 @@ void Shader::init(ID3D11Device *dev, ID3D11DeviceContext *devContext)
 	// pixel shader
 	dev->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), NULL, &m_pShader);
 	devContext->PSSetShader(m_pShader, NULL, 0);
+	devContext->PSSetShaderResources(0, 1, &texture);
+	devContext->PSSetSamplers(0, 1, &sampleState);
 
 
 	// input layout
 	std::vector<D3D11_INPUT_ELEMENT_DESC> vBufElements;
 	D3D11_INPUT_ELEMENT_DESC clipPos = {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0};
-	D3D11_INPUT_ELEMENT_DESC color = {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0};
+	D3D11_INPUT_ELEMENT_DESC tex = {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0};
 	vBufElements.push_back(clipPos);
-	vBufElements.push_back(color);
+	vBufElements.push_back(tex);
 	dev->CreateInputLayout(&vBufElements[0], vBufElements.size(), vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), &m_inputLayout);
 	devContext->IASetInputLayout(m_inputLayout);
 }
@@ -44,4 +45,6 @@ void Shader::release()
 	//	m_gShader->Release();
 	if (m_pShader)
 		m_pShader->Release();
+	if (m_inputLayout)
+		m_inputLayout->Release();
 }

@@ -2,8 +2,8 @@ struct GIn
 {
     float4 clipPos : SV_POSITION;
     float4 color : COLOR;
-	float3 worldPos : TEXCOORD0;
-	float3 worldNormal : TEXCOORD1;
+	float3 worldPos : TEXCOORD8;
+	float3 worldNormal : TEXCOORD9;
 };
 
 typedef GIn GOut;

@@ -1,9 +1,15 @@
+struct VIn
+{
+	float4 position : POSITION;
+	float2 texCoord : TEXCOORD0;
+};
+
 struct VOut
 {
     float4 clipPos : SV_POSITION;
-    float4 color : COLOR;
-	float3 worldPos : TEXCOORD0;
-	float3 worldNormal : TEXCOORD1;
+	//float3 worldPos : TEXCOORD8;
+	//float3 worldNormal : TEXCOORD9;
+	float2 texCoord : TEXCOORD0;
 };
 
 cbuffer cb_mx : register(b0)
@@ -13,14 +19,16 @@ cbuffer cb_mx : register(b0)
 };
 
 
-VOut VShader(float4 position : POSITION, float4 color: COLOR)
+VOut VShader(VIn input)
 {
     VOut output;
+	float3 worldPos, worldNormal;
 
-    output.color = color;
-	output.worldPos = mul(worldMatrix, float4(position.xyz, 1.0)).xyz;
-	output.clipPos = mul(viewProjectionMatrix, float4(output.worldPos.xyz, 1.0));	
-	output.worldNormal = normalize(mul(worldMatrix, float4( 0, 1, 0, 0)).xyz);		// TUTAJ PRZYDA£ABY SIÊ NORMALNA MODELU ZMIAST 0,1,0
+	worldPos = mul(worldMatrix, float4(input.position.xyz, 1.0)).xyz;
+	output.clipPos = mul(viewProjectionMatrix, float4(worldPos.xyz, 1.0));	
+	worldNormal = normalize(mul(worldMatrix, float4( 0, 1, 0, 0)).xyz);		// TUTAJ PRZYDA£ABY SIÊ NORMALNA MODELU ZMIAST 0,1,0
+
+	output.texCoord = input.texCoord;
 
     return output;
 }
