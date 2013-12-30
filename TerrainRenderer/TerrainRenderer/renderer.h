@@ -5,6 +5,7 @@
 #include "shader.h"
 #include "terrain.h"
 #include "camera.h"
+#include "textures.h"
 
 /// A renderer class (using DX)
 class Renderer
@@ -23,7 +24,6 @@ public:
 
 private:
 	bool createRasterizerState();
-	bool prepareTextures();
 
 private:
 	Camera *m_camera;
@@ -38,11 +38,10 @@ private:
 	ID3D11RenderTargetView *m_renderTargetView;
 	ID3D11Buffer *m_vBuffer, *m_iBuffer, *m_mBuffer;
 	ID3D11RasterizerState *m_rastSolid, *m_rastWire;
-	ID3D11SamplerState *m_samplerState;
-	ID3D11ShaderResourceView *m_texture;
 	
 	D3D11_VIEWPORT m_viewport;
 	Shader m_shader;
+	Textures m_textures;
 
 	D3DXMATRIX m_projectionMatrix;
 	D3DXMATRIX m_worldMatrix;

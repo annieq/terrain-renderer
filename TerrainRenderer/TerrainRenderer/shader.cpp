@@ -5,7 +5,7 @@ Shader::Shader()
 {
 }
 
-void Shader::init(ID3D11Device *dev, ID3D11DeviceContext *devContext, ID3D11ShaderResourceView *texture, ID3D11SamplerState *sampleState)
+void Shader::init(ID3D11Device *dev, ID3D11DeviceContext *devContext, std::vector<ID3D11ShaderResourceView*> texture, ID3D11SamplerState *sampleState)
 {
 	ID3D10Blob *vsBlob, *psBlob; //, *gsBlob;
 	D3DX11CompileFromFile(L"../TerrainRenderer/vertex.fx", NULL, NULL, "VShader", "vs_5_0", NULL, NULL, NULL, &vsBlob, NULL, NULL);
@@ -23,7 +23,8 @@ void Shader::init(ID3D11Device *dev, ID3D11DeviceContext *devContext, ID3D11Shad
 	// pixel shader
 	dev->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), NULL, &m_pShader);
 	devContext->PSSetShader(m_pShader, NULL, 0);
-	devContext->PSSetShaderResources(0, 1, &texture);
+	devContext->PSSetShaderResources(0, 1, &texture[0]);
+	devContext->PSSetShaderResources(1, 1, &texture[1]);
 	devContext->PSSetSamplers(0, 1, &sampleState);
 
 

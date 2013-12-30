@@ -17,6 +17,7 @@
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="terrain.cpp" />
+    <ClCompile Include="textures.cpp" />
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -26,6 +27,7 @@
     <ClInclude Include="renderer.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="terrain.h" />
+    <ClInclude Include="textures.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>

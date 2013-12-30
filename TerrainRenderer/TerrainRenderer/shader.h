@@ -8,7 +8,7 @@ class Shader
 {
 public:
 	Shader();
-	void init(ID3D11Device *dev, ID3D11DeviceContext *devContext, ID3D11ShaderResourceView *texture, ID3D11SamplerState *sampleState);
+	void init(ID3D11Device *dev, ID3D11DeviceContext *devContext, std::vector<ID3D11ShaderResourceView*> texture, ID3D11SamplerState *sampleState);
 	void release();
 
 private:
