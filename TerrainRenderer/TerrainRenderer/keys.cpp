@@ -13,8 +13,8 @@ void Keys::Initialize()
 {
 	for(int i=0; i<256; i++)
 		m_keyboardState[i] = false;
+	m_lmbstate = false;
 }
-
 
 void Keys::KeyPressed(unsigned int key)
 {
@@ -28,8 +28,22 @@ void Keys::KeyReleased(unsigned int key)
 
 bool Keys::isKeyPressed(unsigned int key)
 {
-	// Do a bitwise and on the keyboard state to check if 'key' is currently being pressed.
 	return m_keyboardState[key];
+}
+
+void Keys::lmbPressed()
+{
+	m_lmbstate = true;
+}
+
+void Keys::lmbRelased()
+{
+	m_lmbstate = false;
+}
+
+bool Keys::isLmbPressed()
+{
+	return m_lmbstate;
 }
 
 void Keys::checkMoveRotate(D3DXVECTOR3& move, D3DXVECTOR3& rotate)

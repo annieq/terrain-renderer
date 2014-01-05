@@ -76,8 +76,9 @@ void Window::run()
 			D3DXVECTOR3 rotate(0.0f,0.0f,0.0f);
 			m_keys->checkMoveRotate(move, rotate);
 
+			bool lmbState = m_keys->isLmbPressed();
 			// RENDERING
-			m_renderer->renderFrame(move,rotate);
+			m_renderer->renderFrame(move,rotate,lmbState);
 		}
     }
 }
@@ -109,6 +110,17 @@ LRESULT CALLBACK Window::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 			// If a key is released then send it to the input object so it can unset the state for that key.
 			m_keys->KeyReleased((unsigned int)wparam);
 			return 0;
+		}
+
+		case WM_LBUTTONDOWN:
+		{
+			m_keys->lmbPressed();
+		}
+
+		case WM_LBUTTONUP:
+		{
+			if(wparam == 0)
+				m_keys->lmbRelased();
 		}
 
 		// Any other messages send to the default message handler as our application won't make use of them.

@@ -36,9 +36,13 @@ public:
 	void KeyReleased(unsigned int key);
 	bool isKeyPressed(unsigned int key);
 
+	void lmbPressed();
+	void lmbRelased();
+	bool isLmbPressed();
+
 	void checkMoveRotate(D3DXVECTOR3& move, D3DXVECTOR3& rotate);
 
 private:
 	bool m_keyboardState[256];
-
+	bool m_lmbstate;
 };

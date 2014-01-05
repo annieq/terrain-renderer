@@ -19,6 +19,7 @@ Renderer::Renderer()
 	m_shader = Shader();
 	m_wireframe = false;
 	m_NextGameTick = GetTickCount();	// init next frame time for "now"
+	m_terr = 0;
 }
 
 bool Renderer::initDX(HWND hWnd)
@@ -86,10 +87,10 @@ bool Renderer::initDX(HWND hWnd)
     D3DXMatrixIdentity(&m_worldMatrix);
 	
 	// draw a terrain (actually set vertex & index buffers :P)
-	Terrain terr = Terrain(m_device);
-	if (!terr.createVertices(&m_vBuffer, &m_numberOfVertices))
+	m_terr = new Terrain(m_device);
+	if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
 		return false;
-	if (!terr.createIndices(&m_iBuffer, &m_numberOfIndices))
+	if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
 		return false;
 	
 	hr = FW1CreateFactory(FW1_VERSION, &m_FW1Factory);
@@ -149,7 +150,7 @@ void Renderer::GetWorldMatrix(D3DXMATRIX& worldMatrix) {
 }
 */
 
-void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate)
+void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState)
 {
 	int sleep_time = 0;
 	HRESULT hr;
@@ -189,8 +190,6 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate)
 	// Set the buffer.
 	m_deviceContext->VSSetConstantBuffers( 0, 1, &m_mBuffer );
 
-
-
 	// configure Input Assembler stage
 	UINT stride = sizeof(Vertex_PosTex);
 	UINT offset = 0;
@@ -200,6 +199,26 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate)
 	
 	m_deviceContext->RSSetState(m_wireframe ? m_rastWire : m_rastSolid);
 
+
+	if(lmbState)
+	{
+		POINT mouseCoords;
+		GetCursorPos(&mouseCoords);	// get mouse coordinates (x,y)
+		float x = (2.0f * mouseCoords.x) / WINDOW_WIDTH - 1.0f;	// Normalise them
+		float y = 1.0f - (2.0f * mouseCoords.y) / WINDOW_HEIGHT;
+		float z = 1.0f;
+		D3DXVECTOR4 origin(x,y,0,1);
+		D3DXVECTOR4 end(x,y,1,1);
+
+		D3DXMATRIX *inverseviewprojmx = new D3DXMATRIX();
+		D3DXMatrixInverse(inverseviewprojmx,NULL,&(mConstData.viewProjMatrix));
+		D3DXVECTOR4 *origin4 = new D3DXVECTOR4();
+		D3DXVECTOR4 *end4 = new D3DXVECTOR4();
+		D3DXVec4Transform(origin4,&origin,inverseviewprojmx);
+		D3DXVec4Transform(end4,&end,inverseviewprojmx);
+
+		m_terr->checkPoints(origin4,end4);
+	}
 	// draw vertices
 	if (m_numberOfVertices)
 	{
@@ -220,6 +239,7 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate)
 	oss << "Obrót kamery: x=" << crot.x << " y=" << crot.y << " z=" << crot.z << std:: endl;
 	oss << "Klawisze: \nStrzalki - ruch kamery :: PageUp/Down - zblizenie/oddalenie :: NUM2/4/6/8 - obrót kamery" << std:: endl;
 	oss << "F1 - tryb wireframe" << std::endl;
+	oss << "Stan LMB: " << (lmbState?"true":"false") << std::endl;
 
 	std::wstring text = oss.str();
 
@@ -255,6 +275,8 @@ void Renderer::shutdown()
 	m_shader.release();
 	m_textures.release();
 
+	if (m_terr)
+		delete m_terr;
 	if (m_swapChain)
 		m_swapChain->Release();
 	if (m_renderTargetView)

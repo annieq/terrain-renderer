@@ -3,12 +3,12 @@
 Terrain::Terrain(ID3D11Device *dev)
 	: m_device(dev)
 {
+	selectedId = -1;
 }
 
 bool Terrain::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices)
 {
 	HRESULT hr;
-	std::vector<Vertex_PosTex> vertices;
 
 	float rowCnt = -TERR_WIDTH,
 		colCnt = -TERR_HEIGHT;
@@ -81,4 +81,31 @@ bool Terrain::createIndices(ID3D11Buffer **iBuffer, unsigned int *numOfIndices)
 void Terrain::vertexUp(int vertexX, int vertexZ, float value)
 {
 	// TODO
+}
+void Terrain::vertexUp(float value)
+{
+	if(selectedId >= 0)
+		vertices[selectedId].y += value;
+}
+int Terrain::getSelectedId() 
+{
+	return selectedId;
+}
+int Terrain::checkPoints(D3DXVECTOR4* linep1,D3DXVECTOR4* linep2)
+{
+	for(int i=0;i<vertices.size();i++)
+	{
+		FXMVECTOR p = XMLoadFloat3(&XMFLOAT3(vertices[i].x,vertices[i].y,vertices[i].z));
+		FXMVECTOR lp1 = XMLoadFloat3(&XMFLOAT3(linep1->x,linep1->y,linep1->z));
+		FXMVECTOR lp2 = XMLoadFloat3(&XMFLOAT3(linep2->x,linep2->y,linep2->z));
+		float dist = 0.0;
+		XMStoreFloat(&dist, XMVector3LinePointDistance(lp1,lp2,p));
+		if(dist < 1.0)
+		{
+			selectedId = i;
+			return i;
+		}
+	}
+	selectedId = -1;
+	return -1;
 }

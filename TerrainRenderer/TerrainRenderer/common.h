@@ -11,6 +11,7 @@
 #include <d3d11.h>
 #include <D3DX11.h>
 #include <d3dx10math.h>
+#include <xnamath.h>
 #include <vector>
 #include <sstream>
 #include <string.h>

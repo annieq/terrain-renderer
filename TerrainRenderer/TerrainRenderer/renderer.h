@@ -13,7 +13,7 @@ class Renderer
 public:
 	Renderer();
 	bool initDX(HWND);
-	void renderFrame(D3DXVECTOR3,D3DXVECTOR3);
+	void renderFrame(D3DXVECTOR3,D3DXVECTOR3,bool);
 	void shutdown();
 	void changeWireframe();
 	/*
@@ -27,6 +27,7 @@ private:
 
 private:
 	Camera *m_camera;
+	Terrain *m_terr;
 
 	IFW1Factory *m_FW1Factory;
 	IFW1FontWrapper *m_FontWrapper;
