@@ -12,6 +12,9 @@
 #define NRIGHTARROW 102
 #define NUPARROW 104
 
+#define NUMPADPLUS 107
+#define NUMPADMINUS 109
+
 #define PGUP 33
 #define PGDN 34
 
@@ -40,7 +43,7 @@ public:
 	void lmbRelased();
 	bool isLmbPressed();
 
-	void checkMoveRotate(D3DXVECTOR3& move, D3DXVECTOR3& rotate);
+	void checkMoveRotate(D3DXVECTOR3& move, D3DXVECTOR3& rotate, float& vertexMove);
 
 private:
 	bool m_keyboardState[256];

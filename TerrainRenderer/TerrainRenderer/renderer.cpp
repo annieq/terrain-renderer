@@ -45,6 +45,7 @@ bool Renderer::initDX(HWND hWnd)
 	if (FAILED(hr))
 		return false;
 
+	m_windowHandle = hWnd;
 	// back buffer & render target
 	hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_backBuffer);
 	if (FAILED(hr))
@@ -193,31 +194,31 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState)
 	// configure Input Assembler stage
 	UINT stride = sizeof(Vertex_PosTex);
 	UINT offset = 0;
+	m_terr->refreshVBuffer(&m_vBuffer);
 	m_deviceContext->IASetVertexBuffers(0, 1, &m_vBuffer, &stride, &offset);
 	m_deviceContext->IASetIndexBuffer(m_iBuffer, DXGI_FORMAT_R16_UINT, 0);
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
 	m_deviceContext->RSSetState(m_wireframe ? m_rastWire : m_rastSolid);
 
+	float x = 0.0f,y = 0.0f;
 
 	if(lmbState)
 	{
 		POINT mouseCoords;
 		GetCursorPos(&mouseCoords);	// get mouse coordinates (x,y)
-		float x = (2.0f * mouseCoords.x) / WINDOW_WIDTH - 1.0f;	// Normalise them
-		float y = 1.0f - (2.0f * mouseCoords.y) / WINDOW_HEIGHT;
-		float z = 1.0f;
-		D3DXVECTOR4 origin(x,y,0,1);
-		D3DXVECTOR4 end(x,y,1,1);
+		ScreenToClient(m_windowHandle, &mouseCoords);
+		x = (2.0f * mouseCoords.x) / WINDOW_WIDTH - 1.0f;	// Normalise them
+		y = 1.0f - (2.0f * mouseCoords.y) / WINDOW_HEIGHT;
+		D3DXVECTOR3* origin = new D3DXVECTOR3(x,y,0.0f);
+		D3DXVECTOR3* end = new D3DXVECTOR3(x,y,1.0f);
 
 		D3DXMATRIX *inverseviewprojmx = new D3DXMATRIX();
 		D3DXMatrixInverse(inverseviewprojmx,NULL,&(mConstData.viewProjMatrix));
-		D3DXVECTOR4 *origin4 = new D3DXVECTOR4();
-		D3DXVECTOR4 *end4 = new D3DXVECTOR4();
-		D3DXVec4Transform(origin4,&origin,inverseviewprojmx);
-		D3DXVec4Transform(end4,&end,inverseviewprojmx);
+		D3DXVec3TransformCoord(origin,origin,inverseviewprojmx);
+		D3DXVec3TransformCoord(end,end,inverseviewprojmx);
 
-		m_terr->checkPoints(origin4,end4);
+		m_terr->checkPoints(origin,end);
 	}
 	// draw vertices
 	if (m_numberOfVertices)
@@ -240,6 +241,7 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState)
 	oss << "Klawisze: \nStrzalki - ruch kamery :: PageUp/Down - zblizenie/oddalenie :: NUM2/4/6/8 - obrót kamery" << std:: endl;
 	oss << "F1 - tryb wireframe" << std::endl;
 	oss << "Stan LMB: " << (lmbState?"true":"false") << std::endl;
+	oss << "ID wybranego wierzcholka: " << m_terr->getSelectedId() << "/" << m_numberOfVertices << " (" << x << "," << y << ")" << std::endl;
 
 	std::wstring text = oss.str();
 
@@ -266,6 +268,10 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState)
 void Renderer::changeWireframe()
 {
 	m_wireframe = !m_wireframe;
+}
+void Renderer::moveVertex(float value)
+{
+	m_terr->vertexUp(value);
 }
 
 void Renderer::shutdown()

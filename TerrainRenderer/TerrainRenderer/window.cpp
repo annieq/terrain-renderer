@@ -74,10 +74,12 @@ void Window::run()
 			// Calculating camera moves
 			D3DXVECTOR3 move(0.0f,0.0f,0.0f);
 			D3DXVECTOR3 rotate(0.0f,0.0f,0.0f);
-			m_keys->checkMoveRotate(move, rotate);
+			float vertexMove = 0.0f;
+			m_keys->checkMoveRotate(move, rotate,vertexMove);
 
 			bool lmbState = m_keys->isLmbPressed();
 			// RENDERING
+			m_renderer->moveVertex(vertexMove);
 			m_renderer->renderFrame(move,rotate,lmbState);
 		}
     }

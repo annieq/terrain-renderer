@@ -46,7 +46,7 @@ bool Keys::isLmbPressed()
 	return m_lmbstate;
 }
 
-void Keys::checkMoveRotate(D3DXVECTOR3& move, D3DXVECTOR3& rotate)
+void Keys::checkMoveRotate(D3DXVECTOR3& move, D3DXVECTOR3& rotate, float& vertexMove)
 {
 	move.x -= m_keyboardState[LEFTARROW] ? 1 : 0;
 	move.x += m_keyboardState[RIGHTARROW] ? 1 : 0;
@@ -59,4 +59,7 @@ void Keys::checkMoveRotate(D3DXVECTOR3& move, D3DXVECTOR3& rotate)
 	rotate.y += m_keyboardState[NRIGHTARROW] ? 1 : 0;
 	rotate.x -= m_keyboardState[NUPARROW] ? 1 : 0;
 	rotate.x += m_keyboardState[NDOWNARROW] ? 1 : 0;
+	
+	vertexMove += m_keyboardState[NUMPADPLUS] ? 0.01f : 0.0f;
+	vertexMove -= m_keyboardState[NUMPADMINUS] ? 0.01f : 0.0f;
 }

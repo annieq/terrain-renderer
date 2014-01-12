@@ -27,9 +27,20 @@ bool Terrain::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices
 	*numOfVertices = vertices.size();
 
 	// vertex buffer
+	hr = refreshVBuffer(vBuffer);
+	if (FAILED(hr))
+		return false;
+	
+	return true;
+}
+
+bool Terrain::refreshVBuffer(ID3D11Buffer **vBuffer)
+{
+	HRESULT hr;
+	// vertex buffer
 	D3D11_BUFFER_DESC bufDesc = D3D11_BUFFER_DESC();
 	bufDesc.Usage = D3D11_USAGE_DEFAULT;
-	bufDesc.ByteWidth = sizeof(Vertex_PosTex) * (*numOfVertices);
+	bufDesc.ByteWidth = sizeof(Vertex_PosTex) * (vertices.size());
 	bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufDesc.CPUAccessFlags = 0;
 
@@ -42,7 +53,6 @@ bool Terrain::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices
 	
 	return true;
 }
-
 bool Terrain::createIndices(ID3D11Buffer **iBuffer, unsigned int *numOfIndices)
 {
 	HRESULT hr;
@@ -91,16 +101,34 @@ int Terrain::getSelectedId()
 {
 	return selectedId;
 }
-int Terrain::checkPoints(D3DXVECTOR4* linep1,D3DXVECTOR4* linep2)
+int Terrain::checkPoints(D3DXVECTOR3* linep1,D3DXVECTOR3* linep2)
 {
+	float dist = 0.0;
+	float length = 0.0f;
+
+	D3DXVECTOR3 *raydir, *vLp1, *cross;
+	raydir = new D3DXVECTOR3();
+	vLp1 = new D3DXVECTOR3();
+	cross = new D3DXVECTOR3();
+
+	raydir->x = linep2->x - linep1->x;
+	raydir->y = linep2->y - linep1->y;
+	raydir->z = linep2->z - linep1->z;
+
+	D3DXVec3Normalize(raydir,raydir);
+
 	for(int i=0;i<vertices.size();i++)
 	{
-		FXMVECTOR p = XMLoadFloat3(&XMFLOAT3(vertices[i].x,vertices[i].y,vertices[i].z));
-		FXMVECTOR lp1 = XMLoadFloat3(&XMFLOAT3(linep1->x,linep1->y,linep1->z));
-		FXMVECTOR lp2 = XMLoadFloat3(&XMFLOAT3(linep2->x,linep2->y,linep2->z));
-		float dist = 0.0;
-		XMStoreFloat(&dist, XMVector3LinePointDistance(lp1,lp2,p));
-		if(dist < 1.0)
+		vLp1->x = linep1->x - vertices[i].x;	// Wektor z wierzcho³ka do linep1;
+		vLp1->y = linep1->y - vertices[i].y;
+		vLp1->z = linep1->z - vertices[i].z;
+		
+		D3DXVec3Cross(cross,vLp1,raydir);
+		length = D3DXVec3Length(raydir);
+		dist = D3DXVec3Length(cross);
+		dist /= length;
+
+		if(dist < 1.0f)
 		{
 			selectedId = i;
 			return i;

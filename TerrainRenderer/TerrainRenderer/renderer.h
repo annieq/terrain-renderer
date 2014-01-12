@@ -16,6 +16,7 @@ public:
 	void renderFrame(D3DXVECTOR3,D3DXVECTOR3,bool);
 	void shutdown();
 	void changeWireframe();
+	void moveVertex(float value);
 	/*
 	MO¯E BYC NIEPOTRZEBNE - U¯YWAMY TO W TEJ SAMEJ KLASIE
 	void GetProjectionMatrix(D3DXMATRIX&);
@@ -39,6 +40,8 @@ private:
 	ID3D11RenderTargetView *m_renderTargetView;
 	ID3D11Buffer *m_vBuffer, *m_iBuffer, *m_mBuffer;
 	ID3D11RasterizerState *m_rastSolid, *m_rastWire;
+
+	HWND m_windowHandle;
 	
 	D3D11_VIEWPORT m_viewport;
 	Shader m_shader;
