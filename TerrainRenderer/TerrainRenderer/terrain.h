@@ -20,13 +20,15 @@ public:
 	void vertexUp(int vertexX, int vertexZ, float value);	// change the Y-position of vertex (value can be <0)
 
 	void vertexUp(float value);
-	int getSelectedId();
+	int drawSelectedId(std::wstringstream &);
 
-	int checkPoints(D3DXVECTOR3* linep1,D3DXVECTOR3* linep2);
+	int checkPoints(D3DXVECTOR3* linep1,D3DXVECTOR3* linep2, bool shiftStatus);
+	bool vectorContains(int x);
 private:
 	ID3D11Device *m_device;
 	std::vector<Vertex_PosTex> vertices;
-	int selectedId;
+	std::vector<int> selectedId;
+	
 };
 
 #endif

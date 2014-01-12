@@ -3,7 +3,7 @@
 Terrain::Terrain(ID3D11Device *dev)
 	: m_device(dev)
 {
-	selectedId = -1;
+	selectedId.clear();
 }
 
 bool Terrain::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices)
@@ -94,15 +94,31 @@ void Terrain::vertexUp(int vertexX, int vertexZ, float value)
 }
 void Terrain::vertexUp(float value)
 {
-	if(selectedId >= 0)
-		vertices[selectedId].y += value;
+	for(int i=0;i<selectedId.size();i++)
+		vertices[selectedId[i]].y += value;
 }
-int Terrain::getSelectedId() 
+int Terrain::drawSelectedId(std::wstringstream & oss) 
 {
-	return selectedId;
+	if(selectedId.size() == 0) {
+		oss << "NULL";
+		return 0;
+	}
+	for(int i=0;i<selectedId.size();i++)
+		oss << selectedId[i] <<",";
+	return selectedId.size();
 }
-int Terrain::checkPoints(D3DXVECTOR3* linep1,D3DXVECTOR3* linep2)
+bool Terrain::vectorContains(int x)
 {
+	for(int i=0;i<selectedId.size();i++)
+		if(selectedId[i] == x)
+			return true;
+	return false;
+}
+int Terrain::checkPoints(D3DXVECTOR3* linep1,D3DXVECTOR3* linep2, bool shiftStatus)
+{
+	if(!shiftStatus)
+		selectedId.clear();
+
 	float dist = 0.0;
 	float length = 0.0f;
 
@@ -130,10 +146,10 @@ int Terrain::checkPoints(D3DXVECTOR3* linep1,D3DXVECTOR3* linep2)
 
 		if(dist < 1.0f)
 		{
-			selectedId = i;
+			if(!vectorContains(i))
+				selectedId.push_back(i);
 			return i;
 		}
 	}
-	selectedId = -1;
 	return -1;
 }

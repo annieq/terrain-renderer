@@ -77,10 +77,11 @@ void Window::run()
 			float vertexMove = 0.0f;
 			m_keys->checkMoveRotate(move, rotate,vertexMove);
 
-			bool lmbState = m_keys->isLmbPressed();
+			bool shiftstate = false;
+			bool lmbState = m_keys->isLmbPressed(shiftstate);
 			// RENDERING
 			m_renderer->moveVertex(vertexMove);
-			m_renderer->renderFrame(move,rotate,lmbState);
+			m_renderer->renderFrame(move,rotate,lmbState,shiftstate);
 		}
     }
 }
@@ -116,7 +117,7 @@ LRESULT CALLBACK Window::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 
 		case WM_LBUTTONDOWN:
 		{
-			m_keys->lmbPressed();
+			m_keys->lmbPressed(wparam & MK_SHIFT);
 		}
 
 		case WM_LBUTTONUP:

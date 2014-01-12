@@ -151,7 +151,7 @@ void Renderer::GetWorldMatrix(D3DXMATRIX& worldMatrix) {
 }
 */
 
-void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState)
+void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, bool shiftStatus)
 {
 	int sleep_time = 0;
 	HRESULT hr;
@@ -218,7 +218,7 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState)
 		D3DXVec3TransformCoord(origin,origin,inverseviewprojmx);
 		D3DXVec3TransformCoord(end,end,inverseviewprojmx);
 
-		m_terr->checkPoints(origin,end);
+		m_terr->checkPoints(origin,end,shiftStatus);
 	}
 	// draw vertices
 	if (m_numberOfVertices)
@@ -241,7 +241,9 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState)
 	oss << "Klawisze: \nStrzalki - ruch kamery :: PageUp/Down - zblizenie/oddalenie :: NUM2/4/6/8 - obrót kamery" << std:: endl;
 	oss << "F1 - tryb wireframe" << std::endl;
 	oss << "Stan LMB: " << (lmbState?"true":"false") << std::endl;
-	oss << "ID wybranego wierzcholka: " << m_terr->getSelectedId() << "/" << m_numberOfVertices << " (" << x << "," << y << ")" << std::endl;
+	oss << "ID wybranego wierzcholka: ";
+	m_terr->drawSelectedId(oss);
+	oss << " (" << x << "," << y << ")" << std::endl;
 
 	std::wstring text = oss.str();
 

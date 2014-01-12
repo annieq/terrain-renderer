@@ -31,18 +31,21 @@ bool Keys::isKeyPressed(unsigned int key)
 	return m_keyboardState[key];
 }
 
-void Keys::lmbPressed()
+void Keys::lmbPressed(bool shiftStatus)
 {
 	m_lmbstate = true;
+	m_shiftstate = shiftStatus;
 }
 
 void Keys::lmbRelased()
 {
 	m_lmbstate = false;
+	m_shiftstate = false;
 }
 
-bool Keys::isLmbPressed()
+bool Keys::isLmbPressed(bool& shiftStatus)
 {
+	shiftStatus = m_shiftstate;
 	return m_lmbstate;
 }
 
