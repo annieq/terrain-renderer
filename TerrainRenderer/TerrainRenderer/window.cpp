@@ -99,11 +99,10 @@ void Window::run()
 			switch (m_keys->checkF())
 			{
 			case 2:
-				// todo: okienko z wyborem pliku
+					m_keys->KeyReleased(F2);
 				ofn.lpstrTitle = _T("Zapisz plik");
 				ofn.Flags = OFN_OVERWRITEPROMPT;
 				if(GetSaveFileName(&ofn) == TRUE) {
-					m_keys->KeyReleased(F2);
 					str = CW2A(ofn.lpstrFile);
 					for(size_t i=0;i<str.size();++i)
 						if(str[i] == bslash.c_str()[0]) {
@@ -114,11 +113,10 @@ void Window::run()
 				}
 				break;
 			case 3:
-				// todo: okienko z wyborem pliku
+				m_keys->KeyReleased(F3);
 				ofn.lpstrTitle = _T("Otwórz plik");
 				ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 				if(GetOpenFileName(&ofn) == TRUE) {
-					m_keys->KeyReleased(F3);
 					str = CW2A(ofn.lpstrFile);
 					for(size_t i=0;i<str.size();++i)
 						if(str[i] == bslash.c_str()[0]) {
