@@ -19,7 +19,7 @@ public:
 	void moveVertex(float value);
 
 	bool saveTerrain(std::string filename);
-	bool loadTerrain(std::string filename);
+	bool loadTerrain(std::string filename = "");
 
 	/*
 	MO¯E BYC NIEPOTRZEBNE - U¯YWAMY TO W TEJ SAMEJ KLASIE

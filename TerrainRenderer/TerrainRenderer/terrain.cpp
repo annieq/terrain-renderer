@@ -20,7 +20,7 @@ bool Terrain::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices
 		for (int j = 0; j < cols; ++j)
 		{
 			if (loadedPos.size() > 0)
-				vertices.push_back(Vertex_PosTex(rowCnt, loadedPos[i*rows + cols], colCnt, i%2, j%2));
+				vertices.push_back(Vertex_PosTex(rowCnt, loadedPos[i*rows + j], colCnt, i%2, j%2));
 			else
 				vertices.push_back(Vertex_PosTex(rowCnt, 0.0, colCnt, i%2, j%2));
 			colCnt += colStep;
@@ -196,4 +196,11 @@ bool Terrain::loadFromFile(std::string filename)
 	}
 
 	return true;
+}
+
+void Terrain::reset()
+{
+	loadedPos.clear();
+	for (int i = 0; i < rows*cols; ++i)
+		loadedPos.push_back(0.0);
 }

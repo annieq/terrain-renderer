@@ -76,15 +76,19 @@ void Window::run()
 			D3DXVECTOR3 rotate(0.0f,0.0f,0.0f);
 			float vertexMove = 0.0f;
 			m_keys->checkMoveRotate(move, rotate,vertexMove);
-			if (m_keys->checkSave())
+			switch (m_keys->checkF())
 			{
+			case 2:
 				// todo: okienko z wyborem pliku
 				m_renderer->saveTerrain("D:\\terrain.ter");
-			}
-			if (m_keys->checkLoad())
-			{
+				break;
+			case 3:
 				// todo: okienko z wyborem pliku
 				m_renderer->loadTerrain("D:\\terrain.ter");
+				break;
+			case 4:
+				m_renderer->loadTerrain();
+				break;
 			}
 
 			bool shiftstate = false;

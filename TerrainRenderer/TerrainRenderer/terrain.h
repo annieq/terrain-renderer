@@ -26,6 +26,7 @@ public:
 
 	bool saveToFile(std::string filename);
 	bool loadFromFile(std::string filename);
+	void reset();
 
 private:
 	ID3D11Device *m_device;

@@ -63,16 +63,20 @@ void Keys::checkMoveRotate(D3DXVECTOR3& move, D3DXVECTOR3& rotate, float& vertex
 	rotate.x -= m_keyboardState[NUPARROW] ? 1 : 0;
 	rotate.x += m_keyboardState[NDOWNARROW] ? 1 : 0;
 	
-	vertexMove += m_keyboardState[NUMPADPLUS] ? 0.01f : 0.0f;
-	vertexMove -= m_keyboardState[NUMPADMINUS] ? 0.01f : 0.0f;
+	vertexMove += m_keyboardState[NUMPADPLUS] ? 0.1f : 0.0f;
+	vertexMove -= m_keyboardState[NUMPADMINUS] ? 0.1f : 0.0f;
 }
 
-bool Keys::checkSave()
+int Keys::checkF()
 {
-	return m_keyboardState[F2];
-}
+	if (m_keyboardState[F1])
+		return 1;
+	if (m_keyboardState[F2])
+		return 2;
+	if (m_keyboardState[F3])
+		return 3;
+	if (m_keyboardState[F4])
+		return 4;
 
-bool Keys::checkLoad()
-{
-	return m_keyboardState[F3];
+	return -1;
 }

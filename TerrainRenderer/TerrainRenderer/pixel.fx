@@ -15,11 +15,10 @@ float4 PShader(PIn input) : SV_TARGET
 {
 	float4 texColor;
 
-	if (input.worldPos.x > 0.0 && input.worldPos.x < 20.0
-		|| input.worldPos.x < 0.0 && input.worldPos.x > -20.0)
+	if (input.worldPos.y > 2.0)
 	{
-		texColor = abs(input.worldPos.x) * 0.05 * tex0.Sample(basicSampler, input.texCoord) 
-				 + (20.0 - abs(input.worldPos.x)) * 0.05 * tex1.Sample(basicSampler, input.texCoord);
+		texColor = clamp(input.worldPos.y		   * 0.05, 0, 1) * tex1.Sample(basicSampler, input.texCoord)
+				 + clamp((20.0 - input.worldPos.y) * 0.05, 0, 1) * tex0.Sample(basicSampler, input.texCoord);
 	}
 	else
 		texColor = tex0.Sample(basicSampler, input.texCoord);

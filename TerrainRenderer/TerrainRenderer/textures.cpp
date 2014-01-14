@@ -31,8 +31,8 @@ bool Textures::init(ID3D11Device *dev, ID3D11DeviceContext *devContext)
 		return false;
 
 	m_textures.resize(2);
-	hr = D3DX11CreateShaderResourceViewFromFile(dev, L"../TerrainRenderer/resources/tex2.png", NULL, NULL, &m_textures[0], NULL);
-	hr = D3DX11CreateShaderResourceViewFromFile(dev, L"../TerrainRenderer/resources/tex-water.jpg", NULL, NULL, &m_textures[1], NULL);
+	hr = D3DX11CreateShaderResourceViewFromFile(dev, L"../TerrainRenderer/resources/grass-256x256.png", NULL, NULL, &m_textures[0], NULL);
+	hr = D3DX11CreateShaderResourceViewFromFile(dev, L"../TerrainRenderer/resources/rocks-256x256.png", NULL, NULL, &m_textures[1], NULL);
 	if (FAILED(hr))
 	{
 		m_textures.resize(0);
