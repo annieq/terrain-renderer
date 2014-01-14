@@ -7,7 +7,6 @@ Window::Window()
 
 bool Window::initialize()
 {
-	HWND hWindow;
 	WNDCLASSEX wc;
 
 	ZeroMemory(&wc, sizeof(WNDCLASSEX));
@@ -57,8 +56,29 @@ bool Window::initialize()
 void Window::run()
 {
 	MSG msg;
+	OPENFILENAME ofn;
+	std::string str;
+	char szFile[260];       // buffer for file name
+	HANDLE hf;              // file handle
 	
 	ZeroMemory(&msg, sizeof(MSG));
+
+	// Initialize OPENFILENAME
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = hWindow;
+	ofn.lpstrFile = (LPWSTR)szFile;
+	// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
+	// use the contents of szFile to initialize itself.
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = L"Pliki terenu\0*.TER\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	std::string bslash = "\\";
+	std::string dbslash = "\\\\";
 
     while(true)
     {
@@ -80,11 +100,33 @@ void Window::run()
 			{
 			case 2:
 				// todo: okienko z wyborem pliku
-				m_renderer->saveTerrain("D:\\terrain.ter");
+				ofn.lpstrTitle = _T("Zapisz plik");
+				ofn.Flags = OFN_OVERWRITEPROMPT;
+				if(GetSaveFileName(&ofn) == TRUE) {
+					m_keys->KeyReleased(F2);
+					str = CW2A(ofn.lpstrFile);
+					for(size_t i=0;i<str.size();++i)
+						if(str[i] == bslash.c_str()[0]) {
+							str.replace(i,1,dbslash);
+							++i;
+						}
+					m_renderer->saveTerrain(str);
+				}
 				break;
 			case 3:
 				// todo: okienko z wyborem pliku
-				m_renderer->loadTerrain("D:\\terrain.ter");
+				ofn.lpstrTitle = _T("Otwórz plik");
+				ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+				if(GetOpenFileName(&ofn) == TRUE) {
+					m_keys->KeyReleased(F3);
+					str = CW2A(ofn.lpstrFile);
+					for(size_t i=0;i<str.size();++i)
+						if(str[i] == bslash.c_str()[0]) {
+							str.replace(i,1,dbslash);
+							++i;
+						}
+					m_renderer->loadTerrain(str);
+				}
 				break;
 			case 4:
 				m_renderer->loadTerrain();
@@ -98,6 +140,13 @@ void Window::run()
 			m_renderer->renderFrame(move,rotate,lmbState,shiftstate);
 		}
     }
+}
+
+void stringBSlashReplacer(std::string& in)
+{
+	for(int i=0;i<in.size();++i)
+		if(in[i] == char("\\"))
+			in[i] = char("/");
 }
 
 void Window::shutdown()

@@ -18,6 +18,7 @@ public:
 private:
 	Renderer *m_renderer;
 	Keys *m_keys;
+	HWND hWindow;
 
 };
 
