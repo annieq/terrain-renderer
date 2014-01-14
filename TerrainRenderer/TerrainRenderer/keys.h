@@ -19,8 +19,9 @@
 #define PGDN 34
 
 #define F1 112
-// #define F2 113
-// #define F3 114
+#define F2 113
+#define F3 114
+//#define F4 115
 // ....
 // #define F12 123
 
@@ -44,6 +45,8 @@ public:
 	bool isLmbPressed(bool& shiftStatus);
 
 	void checkMoveRotate(D3DXVECTOR3& move, D3DXVECTOR3& rotate, float& vertexMove);
+	bool checkSave();
+	bool checkLoad();
 
 private:
 	bool m_keyboardState[256];

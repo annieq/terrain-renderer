@@ -76,6 +76,16 @@ void Window::run()
 			D3DXVECTOR3 rotate(0.0f,0.0f,0.0f);
 			float vertexMove = 0.0f;
 			m_keys->checkMoveRotate(move, rotate,vertexMove);
+			if (m_keys->checkSave())
+			{
+				// todo: okienko z wyborem pliku
+				m_renderer->saveTerrain("D:\\terrain.ter");
+			}
+			if (m_keys->checkLoad())
+			{
+				// todo: okienko z wyborem pliku
+				m_renderer->loadTerrain("D:\\terrain.ter");
+			}
 
 			bool shiftstate = false;
 			bool lmbState = m_keys->isLmbPressed(shiftstate);

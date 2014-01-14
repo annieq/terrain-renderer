@@ -1,7 +1,7 @@
 #include "terrain.h"
 
 Terrain::Terrain(ID3D11Device *dev)
-	: m_device(dev)
+	: m_device(dev), rows(160), cols(160)
 {
 	selectedId.clear();
 }
@@ -9,16 +9,20 @@ Terrain::Terrain(ID3D11Device *dev)
 bool Terrain::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices)
 {
 	HRESULT hr;
+	vertices.clear();
 
 	float rowCnt = -TERR_WIDTH,
 		colCnt = -TERR_HEIGHT;
-	float rowStep = 2.0 * (float)TERR_WIDTH/(float)ROWS;
-	float colStep = 2.0 * (float)TERR_HEIGHT/(float)COLS;
-	for (int i = 0; i < ROWS; ++i)
+	float rowStep = 2.0f * (float)TERR_WIDTH/(float)rows;
+	float colStep = 2.0f * (float)TERR_HEIGHT/(float)cols;
+	for (int i = 0; i < rows; ++i)
 	{
-		for (int j = 0; j < COLS; ++j)
+		for (int j = 0; j < cols; ++j)
 		{
-			vertices.push_back(Vertex_PosTex(rowCnt, 0.0, colCnt, i%2, j%2));
+			if (loadedPos.size() > 0)
+				vertices.push_back(Vertex_PosTex(rowCnt, loadedPos[i*rows + cols], colCnt, i%2, j%2));
+			else
+				vertices.push_back(Vertex_PosTex(rowCnt, 0.0, colCnt, i%2, j%2));
 			colCnt += colStep;
 		}
 		colCnt = -TERR_HEIGHT;
@@ -58,16 +62,16 @@ bool Terrain::createIndices(ID3D11Buffer **iBuffer, unsigned int *numOfIndices)
 	HRESULT hr;
 	std::vector<WORD> indices;
 
-	for (int i = 0; i < (ROWS-1); ++i)
-		for (int j = 0; j < (COLS-1); ++j)
+	for (int i = 0; i < (rows-1); ++i)
+		for (int j = 0; j < (cols-1); ++j)
 		{
-			indices.push_back(i*COLS		+ j);
-			indices.push_back(i*COLS		+ j+1);
-			indices.push_back((i+1)*COLS	+ j+1);
+			indices.push_back(i*cols		+ j);
+			indices.push_back(i*cols		+ j+1);
+			indices.push_back((i+1)*cols	+ j+1);
 			
-			indices.push_back(i*COLS		+ j);
-			indices.push_back((i+1)*COLS	+ j+1);
-			indices.push_back((i+1)*COLS	+ j);
+			indices.push_back(i*cols		+ j);
+			indices.push_back((i+1)*cols	+ j+1);
+			indices.push_back((i+1)*cols	+ j);
 		}
 	*numOfIndices = indices.size();
 	
@@ -86,11 +90,6 @@ bool Terrain::createIndices(ID3D11Buffer **iBuffer, unsigned int *numOfIndices)
 		return false;
 
 	return true;
-}
-
-void Terrain::vertexUp(int vertexX, int vertexZ, float value)
-{
-	// TODO
 }
 void Terrain::vertexUp(float value)
 {
@@ -152,4 +151,49 @@ int Terrain::checkPoints(D3DXVECTOR3* linep1,D3DXVECTOR3* linep2, bool shiftStat
 		}
 	}
 	return -1;
+}
+
+bool Terrain::saveToFile(std::string filename)
+{
+	std::ofstream file;
+	file.open(filename);
+	if (!file.is_open())
+		return false;
+
+	file << rows << "\n";
+	file << cols;
+	for (int i = 0; i < vertices.size(); ++i)
+	{
+		file << "\n" << vertices[i].y;
+	}
+
+	return true;
+}
+
+bool Terrain::loadFromFile(std::string filename)
+{
+	loadedPos.clear();
+
+	std::ifstream file;
+	file.open(filename);
+	if (!file.is_open())
+		return false;
+
+	file >> rows;
+	file >> cols;
+
+	float val;
+	while (!file.eof())
+	{
+		file >> val;
+		loadedPos.push_back(val);
+	}
+
+	if (loadedPos.size() != rows*cols)
+	{
+		loadedPos.clear();
+		return false;
+	}
+
+	return true;
 }

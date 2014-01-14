@@ -239,7 +239,8 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, 
 	oss << "Pozycja kamery: x=" << cpos.x << " y=" << cpos.y << " z=" << cpos.z << std:: endl;
 	oss << "Obrót kamery: x=" << crot.x << " y=" << crot.y << " z=" << crot.z << std:: endl;
 	oss << "Klawisze: \nStrzalki - ruch kamery :: PageUp/Down - zblizenie/oddalenie :: NUM2/4/6/8 - obrót kamery" << std:: endl;
-	oss << "F1 - tryb wireframe" << std::endl;
+	oss << "NUM+/- - wierzcholek w gore/ w dol" << std::endl;
+	oss << "F1 - tryb wireframe :: F2 - zapis do pliku :: F3 - odczyt z pliku" << std::endl;
 	oss << "Stan LMB: " << (lmbState?"true":"false") << std::endl;
 	oss << "ID wybranego wierzcholka: ";
 	m_terr->drawSelectedId(oss);
@@ -311,3 +312,26 @@ void Renderer::shutdown()
 		m_deviceContext->Release();
 }
 
+bool Renderer::saveTerrain(std::string filename)
+{
+	if (m_terr)
+		m_terr->saveToFile(filename);
+	else return false;
+
+	return true;
+}
+
+bool Renderer::loadTerrain(std::string filename)
+{
+	if (!m_terr)
+		return false;
+
+	if (m_terr->loadFromFile(filename))
+	{
+		if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
+			return false;
+		if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
+			return false;
+	}
+	return true;
+}

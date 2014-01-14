@@ -4,11 +4,11 @@
 #include "common.h"
 #include "shader.h"
 
-#define ROWS 16
-#define COLS 16
+#include <string>
+#include <fstream>
 
-#define TERR_WIDTH 100
-#define TERR_HEIGHT 100
+#define TERR_WIDTH 1000
+#define TERR_HEIGHT 1000
 
 class Terrain
 {
@@ -17,17 +17,23 @@ public:
 	bool createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices);
 	bool refreshVBuffer(ID3D11Buffer **vBuffer);
 	bool createIndices(ID3D11Buffer **iBuffer, unsigned int *numOfIndices);
-	void vertexUp(int vertexX, int vertexZ, float value);	// change the Y-position of vertex (value can be <0)
 
-	void vertexUp(float value);
+	void vertexUp(float value);	// change the Y-position of vertex (value can be <0)
 	int drawSelectedId(std::wstringstream &);
 
 	int checkPoints(D3DXVECTOR3* linep1,D3DXVECTOR3* linep2, bool shiftStatus);
 	bool vectorContains(int x);
+
+	bool saveToFile(std::string filename);
+	bool loadFromFile(std::string filename);
+
 private:
 	ID3D11Device *m_device;
-	std::vector<Vertex_PosTex> vertices;
-	std::vector<int> selectedId;
+
+	int rows, cols;	// number of columns & rows
+	std::vector<Vertex_PosTex> vertices;	// list of vertices
+	std::vector<float> loadedPos;
+	std::vector<int> selectedId;	// list of ID od selected vertices
 	
 };
 
