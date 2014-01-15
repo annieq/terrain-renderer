@@ -13,7 +13,15 @@ struct PIn
 
 float4 PShader(PIn input) : SV_TARGET
 {
+	float4 ambientColor = float4(0.15f, 0.15f, 0.15f, 1.0f);
+	float4 diffuseColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	float3 lightDirection = float3(0.3f,-0.8f,0.3f);
 	float4 texColor;
+    float3 lightDir;
+    float lightIntensity;
+    float4 color;
+
+	color = ambientColor;
 
 	if (input.worldPos.y > 2.0)
 	{
@@ -22,5 +30,17 @@ float4 PShader(PIn input) : SV_TARGET
 	}
 	else
 		texColor = tex0.Sample(basicSampler, input.texCoord);
-	return texColor;
+
+	lightDir = -lightDirection;
+
+	lightIntensity = saturate(dot(input.worldNormal, lightDir));
+
+	if(lightIntensity > 0.0f)
+    {
+        // Determine the final diffuse color based on the diffuse color and the amount of light intensity.
+        color += (diffuseColor * lightIntensity);
+    }
+	color = saturate(color);
+	color = color * texColor;
+	return color;
 }

@@ -84,8 +84,7 @@ bool Renderer::initDX(HWND hWnd)
 	if (!m_textures.init(m_device, m_deviceContext))
 		return false;
 	m_shader.init(m_device, m_deviceContext, m_textures.getTextures(), m_textures.getSamplerState());
-
-
+	
 	// Create instance of a camera
 	m_camera = new Camera();
 	if(!m_camera)
