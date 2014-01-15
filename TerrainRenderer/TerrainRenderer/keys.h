@@ -25,7 +25,7 @@
 // ....
 // #define F12 123
 
-// #define ESC 27
+#define ESC 27
 
 class Keys {
 public:

@@ -65,4 +65,32 @@ struct Vertex_PosTex
 };
 
 
+// vertex type with texture and normal
+struct Vertex_PosTexNorm
+{
+	float x, y, z;
+	float a, b, c;
+	float u, v;
+
+	Vertex_PosTexNorm() 
+		: x(0), y(0), z(0), u(0), v(0), a(0), b(1), c(0)
+	{
+	}
+
+	Vertex_PosTexNorm(float xx, float yy, float zz)
+		: x(xx), y(yy), z(zz), u(0), v(0), a(0), b(1), c(0)
+	{
+	}
+
+	Vertex_PosTexNorm(float xx, float yy, float zz, float uu, float vv) 
+		: x(xx), y(yy), z(zz), u(uu), v(vv), a(0), b(1), c(0)
+	{
+	}
+
+	Vertex_PosTexNorm(float xx, float yy, float zz, float uu, float vv, float aa, float bb, float cc) 
+		: x(xx), y(yy), z(zz), u(uu), v(vv), a(aa), b(bb), c(cc)
+	{
+	}
+};
+
 #endif

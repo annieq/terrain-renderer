@@ -30,9 +30,11 @@ void Shader::init(ID3D11Device *dev, ID3D11DeviceContext *devContext, std::vecto
 
 	// input layout
 	std::vector<D3D11_INPUT_ELEMENT_DESC> vBufElements;
-	D3D11_INPUT_ELEMENT_DESC clipPos = {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0};
-	D3D11_INPUT_ELEMENT_DESC tex = {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0};
+	D3D11_INPUT_ELEMENT_DESC clipPos =	{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,	D3D11_INPUT_PER_VERTEX_DATA, 0};
+	D3D11_INPUT_ELEMENT_DESC normal =	{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0};
+	D3D11_INPUT_ELEMENT_DESC tex =		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,	 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0};
 	vBufElements.push_back(clipPos);
+	vBufElements.push_back(normal);
 	vBufElements.push_back(tex);
 	dev->CreateInputLayout(&vBufElements[0], vBufElements.size(), vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), &m_inputLayout);
 	devContext->IASetInputLayout(m_inputLayout);

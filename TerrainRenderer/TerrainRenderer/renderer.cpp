@@ -284,9 +284,8 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, 
 	m_deviceContext->VSSetConstantBuffers( 0, 1, &m_mBuffer );
 
 	// configure Input Assembler stage
-	UINT stride = sizeof(Vertex_PosTex);
+	UINT stride = sizeof(Vertex_PosTexNorm);
 	UINT offset = 0;
-	m_terr->refreshVBuffer(&m_vBuffer);
 	m_deviceContext->IASetVertexBuffers(0, 1, &m_vBuffer, &stride, &offset);
 	m_deviceContext->IASetIndexBuffer(m_iBuffer, DXGI_FORMAT_R16_UINT, 0);
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -367,6 +366,7 @@ void Renderer::changeWireframe()
 void Renderer::moveVertex(float value)
 {
 	m_terr->vertexUp(value);
+	m_terr->refreshVBuffer(&m_vBuffer);
 }
 
 void Renderer::shutdown()
@@ -384,6 +384,12 @@ void Renderer::shutdown()
 		m_renderTargetView->Release();
 	if (m_backBuffer)
 		m_backBuffer->Release();
+	if (m_depthStencil)
+		m_depthStencil->Release();
+	if (m_DSState)
+		m_DSState->Release();
+	if (m_depthStencilView)
+		m_depthStencilView->Release();
 	if (m_FW1Factory)
 		m_FW1Factory->Release();
 	if (m_FontWrapper)
@@ -430,5 +436,6 @@ bool Renderer::loadTerrain(std::string filename)
 	if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
 		return false;
 	
+	m_terr->refreshVBuffer(&m_vBuffer);
 	return true;
 }

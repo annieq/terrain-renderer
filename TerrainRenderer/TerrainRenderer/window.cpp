@@ -82,6 +82,8 @@ void Window::run()
 
     while(true)
     {
+		if(m_keys->isKeyPressed(ESC))
+			return;
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if (msg.message == WM_QUIT)
