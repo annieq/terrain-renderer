@@ -20,6 +20,8 @@ Renderer::Renderer()
 	m_wireframe = false;
 	m_NextGameTick = GetTickCount();	// init next frame time for "now"
 	m_terr = 0;
+	m_depthStencil = NULL;
+	m_depthStencilView = NULL;
 }
 
 bool Renderer::initDX(HWND hWnd)
@@ -53,15 +55,11 @@ bool Renderer::initDX(HWND hWnd)
 	hr = m_device->CreateRenderTargetView(m_backBuffer, NULL, &m_renderTargetView);
 	if (FAILED(hr))
 		return false;
-	m_backBuffer->Release();	// we no longer need it
-
-	// tu mo¿e byæ jeszcze np. inicjalizacja depthStencil
-
-	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, NULL);
-
+	
 	// rasterizer state
 	if (!createRasterizerState())
 		return false;
+
 
 	// viewport
 	ZeroMemory(&m_viewport, sizeof(D3D11_VIEWPORT));
@@ -100,6 +98,80 @@ bool Renderer::initDX(HWND hWnd)
 	hr = m_FW1Factory->CreateFontWrapper(m_device, L"Arial", &m_FontWrapper);
 	if (FAILED(hr))
 		return false;
+
+	
+	// inicjalizacja depthStencil
+	D3D11_TEXTURE2D_DESC descDepth,descBack;
+	descDepth = D3D11_TEXTURE2D_DESC();			//reset the struct
+	m_backBuffer->GetDesc(&descBack);	
+	m_backBuffer->Release();	// we no longer need it
+
+	descDepth.Width = WINDOW_WIDTH;
+	descDepth.Height = WINDOW_HEIGHT;
+	descDepth.MipLevels = 1;
+	descDepth.ArraySize = 1;
+	descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	descDepth.SampleDesc.Count = 1;
+	descDepth.SampleDesc.Quality = 0;
+	descDepth.Usage = D3D11_USAGE_DEFAULT;
+	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	descDepth.CPUAccessFlags = 0;
+	descDepth.MiscFlags = 0;
+
+	hr = m_device->CreateTexture2D( &descDepth, NULL, &m_depthStencil );
+	if (FAILED(hr))
+		return false;
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+	descDSV = D3D11_DEPTH_STENCIL_VIEW_DESC();
+	descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	descDSV.Texture2D.MipSlice = 0;
+
+	// Create the depth stencil view
+	hr = m_device->CreateDepthStencilView( m_depthStencil, // Depth stencil texture
+											 &descDSV, // Depth stencil desc
+											 &m_depthStencilView );  // [out] Depth stencil view
+	if (FAILED(hr))
+		return false;
+	
+	D3D11_DEPTH_STENCIL_DESC dsDesc;
+
+	// Depth test parameters
+	dsDesc.DepthEnable = true;
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+	// Stencil test parameters
+	dsDesc.StencilEnable = false;
+	//dsDesc.StencilReadMask = 0xFF;
+	//dsDesc.StencilWriteMask = 0xFF;
+	//
+	//// Stencil operations if pixel is front-facing
+	//dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	//dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	//dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	//dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	//
+	//// Stencil operations if pixel is back-facing
+	//dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	//dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	//dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	//dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	// Create depth stencil state
+	hr = m_device->CreateDepthStencilState(&dsDesc, &m_DSState);
+	if (FAILED(hr))
+		return false;
+
+	m_deviceContext->OMSetDepthStencilState(m_DSState,1);
+
+	// Bind the depth stencil view
+	m_deviceContext->OMSetRenderTargets( 1,          // One rendertarget view
+										&m_renderTargetView,      // Render target view, created earlier
+										m_depthStencilView );     // Depth stencil view for the render targ
+
+	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
 
 	return true;
 }
@@ -157,6 +229,7 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, 
 	HRESULT hr;
 
 	m_deviceContext->ClearRenderTargetView(m_renderTargetView, D3DXCOLOR(0.01f, 0.01f, 0.01f, 1.0f));
+	m_deviceContext->ClearDepthStencilView(m_depthStencilView,D3D11_CLEAR_DEPTH  | D3D11_CLEAR_STENCIL,1.0,NULL);
 
 	// move and rotate the camera
 	m_camera->Move(move);

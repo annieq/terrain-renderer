@@ -41,6 +41,9 @@ private:
 	ID3D11Device *m_device;
 	ID3D11DeviceContext *m_deviceContext;
 	ID3D11Texture2D *m_backBuffer;
+	ID3D11Texture2D* m_depthStencil;
+	ID3D11DepthStencilState * m_DSState;
+	ID3D11DepthStencilView* m_depthStencilView;
 	ID3D11RenderTargetView *m_renderTargetView;
 	ID3D11Buffer *m_vBuffer, *m_iBuffer, *m_mBuffer;
 	ID3D11RasterizerState *m_rastSolid, *m_rastWire;
