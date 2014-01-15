@@ -29,6 +29,9 @@ public:
 
 private:
 	bool createRasterizerState();
+	HRESULT createDepthScencilTexture();
+	HRESULT createDepthScencilView();
+	HRESULT createDepthScencilState();
 
 private:
 	Camera *m_camera;
