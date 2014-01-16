@@ -283,7 +283,7 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, 
 	m_deviceContext->VSSetConstantBuffers( 0, 1, &m_mBuffer );
 
 	// configure Input Assembler stage
-	UINT stride = sizeof(Vertex_PosTexNorm);
+	UINT stride = sizeof(Vertex_PosTex);
 	UINT offset = 0;
 	m_deviceContext->IASetVertexBuffers(0, 1, &m_vBuffer, &stride, &offset);
 	m_deviceContext->IASetIndexBuffer(m_iBuffer, DXGI_FORMAT_R16_UINT, 0);

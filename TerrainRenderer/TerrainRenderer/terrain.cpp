@@ -20,9 +20,9 @@ bool Terrain::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices
 		for (int j = 0; j < cols; ++j)
 		{
 			if (loadedPos.size() > 0) 
-				vertices.push_back(Vertex_PosTexNorm(rowCnt, loadedPos[i*rows + j], colCnt, i%2, j%2));
+				vertices.push_back(Vertex_PosTex(rowCnt, loadedPos[i*rows + j], colCnt, i%2, j%2));
 			else
-				vertices.push_back(Vertex_PosTexNorm(rowCnt, 0.0, colCnt, i%2, j%2));
+				vertices.push_back(Vertex_PosTex(rowCnt, 0.0, colCnt, i%2, j%2));
 			colCnt += colStep;
 		}
 		colCnt = -TERR_HEIGHT;
@@ -38,7 +38,7 @@ bool Terrain::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices
 	return true;
 }
 
-void Terrain::calculateNormals()
+/*void Terrain::calculateNormals()
 {
 	D3DXVECTOR3 va,vb,vc,vd,ve,normal;
 
@@ -87,17 +87,17 @@ void Terrain::CalculateNormalFromFourTriangles(D3DXVECTOR3* va, D3DXVECTOR3* vb,
 		AverageNormal.z=(NormalizedACB.z + NormalizedBCE.z + NormalizedECD.z + NormalizedACB.z)/(float)4.0;
 	
 		D3DXVec3Normalize(normal, &AverageNormal);
-}
+}*/
 
 
 bool Terrain::refreshVBuffer(ID3D11Buffer **vBuffer)
 {
 	HRESULT hr;
 	// vertex buffer
-	calculateNormals();
+	// calculateNormals();
 	D3D11_BUFFER_DESC bufDesc = D3D11_BUFFER_DESC();
 	bufDesc.Usage = D3D11_USAGE_DEFAULT;
-	bufDesc.ByteWidth = sizeof(Vertex_PosTexNorm) * (vertices.size());
+	bufDesc.ByteWidth = sizeof(Vertex_PosTex) * (vertices.size());
 	bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufDesc.CPUAccessFlags = 0;
 

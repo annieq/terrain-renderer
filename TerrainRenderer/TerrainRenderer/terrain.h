@@ -15,9 +15,9 @@ class Terrain
 public:
 	Terrain(ID3D11Device *dev);
 	bool createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices);
-	void calculateNormals();
+	/*void calculateNormals();
 	void CalculateNormalFromFourTriangles(D3DXVECTOR3* va, D3DXVECTOR3* vb, D3DXVECTOR3* vc, 
-						 D3DXVECTOR3* vd, D3DXVECTOR3* ve, D3DXVECTOR3* normal);
+						 D3DXVECTOR3* vd, D3DXVECTOR3* ve, D3DXVECTOR3* normal);*/
 	bool refreshVBuffer(ID3D11Buffer **vBuffer);
 	bool createIndices(ID3D11Buffer **iBuffer, unsigned int *numOfIndices);
 
@@ -35,7 +35,7 @@ private:
 	ID3D11Device *m_device;
 
 	int rows, cols;	// number of columns & rows
-	std::vector<Vertex_PosTexNorm> vertices;	// list of vertices
+	std::vector<Vertex_PosTex> vertices;	// list of vertices
 	std::vector<float> loadedPos;
 	std::vector<int> selectedId;	// list of ID od selected vertices
 	

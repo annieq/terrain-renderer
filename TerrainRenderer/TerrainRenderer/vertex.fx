@@ -1,7 +1,7 @@
 struct VIn
 {
 	float4 position : POSITION;
-	float4 normal	: NORMAL;
+	// float4 normal	: NORMAL;
 	float2 texCoord : TEXCOORD;
 };
 
@@ -26,7 +26,7 @@ VOut VShader(VIn input)
 
 	output.worldPos = mul(worldMatrix, float4(input.position.xyz, 1.0)).xyz;
 	output.clipPos = mul(viewProjectionMatrix, float4(output.worldPos.xyz, 1.0));	
-	output.worldNormal = mul(input.normal.xyz,worldMatrix);
+	output.worldNormal = mul(float3(0,1,0),worldMatrix);
 
 	output.texCoord = input.texCoord;
 
