@@ -50,7 +50,6 @@ void Textures::release()
 		m_textures[i]->Release();
 }
 
-//////////////////////////////////////////////////// TODO: multitex! ////////////////////////////////////////////////
 std::vector<ID3D11ShaderResourceView*> Textures::getTextures()
 {
 	return m_textures;

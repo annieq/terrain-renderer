@@ -23,8 +23,8 @@ void Shader::init(ID3D11Device *dev, ID3D11DeviceContext *devContext, std::vecto
 	// pixel shader
 	dev->CreatePixelShader(psBlob->GetBufferPointer(), psBlob->GetBufferSize(), NULL, &m_pShader);
 	devContext->PSSetShader(m_pShader, NULL, 0);
-	devContext->PSSetShaderResources(0, 1, &texture[0]);
-	devContext->PSSetShaderResources(1, 1, &texture[1]);
+	for (int i = 0; i < texture.size(); ++i)
+		devContext->PSSetShaderResources(i, 1, &texture[i]);
 	devContext->PSSetSamplers(0, 1, &sampleState);
 
 
