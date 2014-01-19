@@ -331,10 +331,11 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, 
 	oss << "Klawisze: \nStrzalki - ruch kamery :: PageUp/Down - zblizenie/oddalenie :: NUM2/4/6/8 - obrót kamery" << std:: endl;
 	oss << "NUM+/- - wierzcholek w gore/ w dol" << std::endl;
 	oss << "F1 - tryb wireframe :: F2 - zapis do pliku :: F3 - odczyt z pliku :: F4 - reset" << std::endl;
-	oss << "Stan LMB: " << (lmbState?"true":"false") << std::endl;
-	oss << "ID wybranego wierzcholka: ";
+	oss << "LMB - zaznaczanie wierzcholkow :: LMB + Shift - zaznaczanie wielu wierzcholkow" << std::endl;
+	oss << "NUM+ - podnoszenie wierzcholkow :: NUM- - obnizanie wierzcholkow" << std::endl;
+	oss << "ID zaznaczonych wierzcholkow: ";
 	m_terr->drawSelectedId(oss);
-	oss << " (" << x << "," << y << ")" << std::endl;
+	// oss << " (" << x << "," << y << ")" << std::endl;
 
 	std::wstring text = oss.str();
 
