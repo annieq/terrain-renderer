@@ -1,4 +1,0 @@
-terrain-renderer
-================
-
-Projekt PwAG

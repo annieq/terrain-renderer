@@ -25,7 +25,7 @@
 // sta³e:
 #define RADIANS_PER_DEGREES  0.0174532925f
 
-#define CAM_MOVE 0.2f	// pojedynczy krok ruchu kamery (PRZYDA£BY SIÊ OGRANICZNIK FPS)
+#define CAM_MOVE 0.2f	// pojedynczy krok ruchu kamery
 #define CAM_ROTATE 0.5f	// pojedynczy obrót kamery w stopniach
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600

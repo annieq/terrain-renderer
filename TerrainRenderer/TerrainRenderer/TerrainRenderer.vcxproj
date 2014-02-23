@@ -31,9 +31,9 @@
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="geometry.fx" />
-    <None Include="pixel.fx" />
-    <None Include="vertex.fx" />
+    <None Include="geometry.gs" />
+    <None Include="pixel.ps" />
+    <None Include="vertex.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8A6080EB-C4F9-4763-AD01-B5BD3387E5C7}</ProjectGuid>

@@ -8,9 +8,9 @@ Shader::Shader()
 void Shader::init(ID3D11Device *dev, ID3D11DeviceContext *devContext, std::vector<ID3D11ShaderResourceView*> texture, ID3D11SamplerState *sampleState)
 {
 	ID3D10Blob *vsBlob, *psBlob, *gsBlob;
-	D3DX11CompileFromFile(L"../TerrainRenderer/vertex.fx", NULL, NULL, "VShader", "vs_5_0", NULL, NULL, NULL, &vsBlob, NULL, NULL);
-	D3DX11CompileFromFile(L"../TerrainRenderer/geometry.fx",	NULL, NULL, "GShader", "gs_5_0", NULL, NULL, NULL, &gsBlob, NULL, NULL);
-	D3DX11CompileFromFile(L"../TerrainRenderer/pixel.fx", NULL, NULL, "PShader", "ps_5_0", NULL, NULL, NULL, &psBlob, NULL, NULL);
+	D3DX11CompileFromFile(L"../TerrainRenderer/vertex.vs", NULL, NULL, "VShader", "vs_5_0", NULL, NULL, NULL, &vsBlob, NULL, NULL);
+	D3DX11CompileFromFile(L"../TerrainRenderer/geometry.gs",	NULL, NULL, "GShader", "gs_5_0", NULL, NULL, NULL, &gsBlob, NULL, NULL);
+	D3DX11CompileFromFile(L"../TerrainRenderer/pixel.ps", NULL, NULL, "PShader", "ps_5_0", NULL, NULL, NULL, &psBlob, NULL, NULL);
 
 	// vertex shader
 	dev->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), NULL, &m_vShader);
@@ -44,8 +44,8 @@ void Shader::release()
 {
 	if (m_vShader)
 		m_vShader->Release();
-	// if (m_gShader)
-	//	m_gShader->Release();
+	if (m_gShader)
+		m_gShader->Release();
 	if (m_pShader)
 		m_pShader->Release();
 	if (m_inputLayout)

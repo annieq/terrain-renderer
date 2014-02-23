@@ -52,7 +52,7 @@ bool Renderer::initDX(HWND hWnd)
 	hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_backBuffer);
 	if (FAILED(hr))
 		return false;
-	// inicjalizacja tekstury depthStencil
+	// depthStencil texture initialization
 	hr = createDepthScencilTexture();
 	if (FAILED(hr))
 		return false;
@@ -61,7 +61,7 @@ bool Renderer::initDX(HWND hWnd)
 	if (FAILED(hr))
 		return false;
 	
-	// inicjalizacja widoku depth-stencil
+	// depth-stencil view initialization
 	hr = createDepthScencilView();
 	if (FAILED(hr))
 		return false;
@@ -168,7 +168,7 @@ bool Renderer::createRasterizerState()
 	
 HRESULT Renderer::createDepthScencilTexture()
 {
-	// inicjalizacja depthStencil
+	// depthStencil initialization
 	D3D11_TEXTURE2D_DESC descDepth;
 	descDepth = D3D11_TEXTURE2D_DESC();	
 
@@ -213,33 +213,10 @@ HRESULT Renderer::createDepthScencilState()
 
 	// Stencil test parameters
 	dsDesc.StencilEnable = false;
-	//dsDesc.StencilReadMask = 0xFF;
-	//dsDesc.StencilWriteMask = 0xFF;
-	//
-	//// Stencil operations if pixel is front-facing
-	//dsDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	//dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-	//dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	//dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-	//
-	//// Stencil operations if pixel is back-facing
-	//dsDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-	//dsDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-	//dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	//dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 	// Create depth stencil state
 	return m_device->CreateDepthStencilState(&dsDesc, &m_DSState);
 }
-/*
-void Renderer::GetProjectionMatrix(D3DXMATRIX& projMatrix) {
-	projMatrix = m_projectionMatrix;
-}
-void Renderer::GetWorldMatrix(D3DXMATRIX& worldMatrix) {
-	worldMatrix = m_worldMatrix;
-
-}
-*/
 
 void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, bool shiftStatus)
 {

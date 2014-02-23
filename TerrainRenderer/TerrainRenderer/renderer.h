@@ -21,12 +21,6 @@ public:
 	bool saveTerrain(std::string filename);
 	bool loadTerrain(std::string filename = "");
 
-	/*
-	MO¯E BYC NIEPOTRZEBNE - U¯YWAMY TO W TEJ SAMEJ KLASIE
-	void GetProjectionMatrix(D3DXMATRIX&);
-	void GetWorldMatrix(D3DXMATRIX&);
-	*/
-
 private:
 	bool createRasterizerState();
 	HRESULT createDepthScencilTexture();

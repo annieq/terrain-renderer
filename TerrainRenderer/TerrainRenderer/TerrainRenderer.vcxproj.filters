@@ -70,13 +70,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="geometry.fx">
+    <None Include="geometry.gs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="vertex.fx">
+    <None Include="pixel.ps">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="pixel.fx">
+    <None Include="vertex.vs">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
