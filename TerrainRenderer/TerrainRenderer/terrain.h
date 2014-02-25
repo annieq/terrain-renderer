@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "shader.h"
+#include "external\CImg.h"
 
 #include <string>
 #include <fstream>

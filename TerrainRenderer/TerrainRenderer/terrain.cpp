@@ -208,17 +208,25 @@ int Terrain::checkPoints(D3DXVECTOR3* linep1,D3DXVECTOR3* linep2, bool shiftStat
 
 bool Terrain::saveToFile(std::string filename)
 {
-	std::ofstream file;
-	file.open(filename);
-	if (!file.is_open())
-		return false;
-
-	file << rows << "\n";
-	file << cols;
+	cimg_library::CImg<double> img(rows, cols);
+	img.fill(0);
 	for (int i = 0; i < vertices.size(); ++i)
 	{
-		file << "\n" << vertices[i].y;
+		img.at(i) = vertices[i].y;
 	}
+	img.save(filename.c_str());
+
+	//std::ofstream file;
+	//file.open(filename);
+	//if (!file.is_open())
+	//	return false;
+
+	//file << rows << "\n";
+	//file << cols;
+	//for (int i = 0; i < vertices.size(); ++i)
+	//{
+	//	file << "\n" << vertices[i].y;
+	//}
 
 	return true;
 }
