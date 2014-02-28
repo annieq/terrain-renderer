@@ -31,6 +31,8 @@
 #define WINDOW_HEIGHT 600
 #define FOV (D3DX_PI/4.0f) // field of view
 
+#define TERRAIN_STEP 0.2	// krok podnoszenia/opuszczania wierzcho³ka
+
 #define SCREEN_NEAR 0.1f
 #define SCREEN_DEPTH 1000.0f
 

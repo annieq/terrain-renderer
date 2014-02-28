@@ -72,7 +72,7 @@ void Window::run()
 	// use the contents of szFile to initialize itself.
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = L"Pliki terenu\0*.TER\0";
+	ofn.lpstrFilter = L"Mapa bitowa\0*.BMP\0";
 	ofn.nFilterIndex = 1;
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;

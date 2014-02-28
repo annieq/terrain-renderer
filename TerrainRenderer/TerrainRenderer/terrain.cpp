@@ -147,7 +147,7 @@ bool Terrain::createIndices(ID3D11Buffer **iBuffer, unsigned int *numOfIndices)
 void Terrain::vertexUp(float value)
 {
 	for(int i=0;i<selectedId.size();i++)
-		vertices[selectedId[i]].y += value;
+		vertices[selectedId[i]].y += (vertices[selectedId[i]].y > 64.0 || vertices[selectedId[i]].y < -64.0) ? 0 : value;
 }
 int Terrain::drawSelectedId(std::wstringstream & oss) 
 {
@@ -208,25 +208,16 @@ int Terrain::checkPoints(D3DXVECTOR3* linep1,D3DXVECTOR3* linep2, bool shiftStat
 
 bool Terrain::saveToFile(std::string filename)
 {
-	cimg_library::CImg<double> img(rows, cols);
-	img.fill(0);
-	for (int i = 0; i < vertices.size(); ++i)
-	{
-		img.at(i) = vertices[i].y;
-	}
+	cimg_library::CImg<> img(rows, cols, 1, 3);
+	for (int i = 0; i < rows; ++i)
+		for (int j = 0; j < cols; ++j)
+		{
+			img.atXY(i, j, 0, 0) = 255.0/128.0 * (vertices[i + j*rows].y + 64.0);
+			img.atXY(i, j, 0, 1) = 0;
+			img.atXY(i, j, 0, 2) = 0;
+		}
+	img.channel(0);
 	img.save(filename.c_str());
-
-	//std::ofstream file;
-	//file.open(filename);
-	//if (!file.is_open())
-	//	return false;
-
-	//file << rows << "\n";
-	//file << cols;
-	//for (int i = 0; i < vertices.size(); ++i)
-	//{
-	//	file << "\n" << vertices[i].y;
-	//}
 
 	return true;
 }
@@ -235,20 +226,16 @@ bool Terrain::loadFromFile(std::string filename)
 {
 	loadedPos.clear();
 
-	std::ifstream file;
-	file.open(filename);
-	if (!file.is_open())
-		return false;
-
-	file >> rows;
-	file >> cols;
-
-	float val;
-	while (!file.eof())
+	cimg_library::CImg<> img(filename.c_str());
+	img.channel(0);
+	float pix = 0.0;
+	for (int i = 0; i < img.size(); ++i)
 	{
-		file >> val;
-		loadedPos.push_back(val);
+		pix = img.at(i);
+		loadedPos.push_back( 128.0/255.0 * pix - 64.0 );
 	}
+	rows = img.width();
+	cols = img.height();
 
 	if (loadedPos.size() != rows*cols)
 	{
