@@ -53,6 +53,27 @@ bool Window::initialize()
 	return true;
 }
 
+// TODO: doprowadziæ do dzia³ania
+void Window::initOFN(OPENFILENAME &ofn)
+{
+	char szFile[260];       // buffer for file name
+
+	// Initialize OPENFILENAME
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = hWindow;
+	ofn.lpstrFile = (LPWSTR)szFile;
+	// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
+	// use the contents of szFile to initialize itself.
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = L"Mapa bitowa\0*.BMP\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+}
+
 void Window::run()
 {
 	MSG msg;
@@ -107,10 +128,13 @@ void Window::run()
 				if(GetSaveFileName(&ofn) == TRUE) {
 					str = CW2A(ofn.lpstrFile);
 					for(size_t i=0;i<str.size();++i)
+					{
 						if(str[i] == bslash.c_str()[0]) {
 							str.replace(i,1,dbslash);
 							++i;
 						}
+					}
+					// tu dodaæ spr czy str koñczy siê na bmp
 					m_renderer->saveTerrain(str);
 				}
 				break;

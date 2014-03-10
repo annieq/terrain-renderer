@@ -15,12 +15,12 @@ bool Terrain::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices
 		colCnt = -TERR_HEIGHT;
 	float rowStep = 2.0f * (float)TERR_WIDTH/(float)rows;
 	float colStep = 2.0f * (float)TERR_HEIGHT/(float)cols;
-	for (int i = 0; i < rows; ++i)
+	for (int j = 0; j < cols; ++j)
 	{
-		for (int j = 0; j < cols; ++j)
+		for (int i = 0; i < rows; ++i)
 		{
 			if (loadedPos.size() > 0) 
-				vertices.push_back(Vertex_PosTex(rowCnt, loadedPos[i*rows + j], colCnt, i%2, j%2));
+				vertices.push_back(Vertex_PosTex(rowCnt, loadedPos[j*rows + i], colCnt, i%2, j%2));
 			else
 				vertices.push_back(Vertex_PosTex(rowCnt, 0.0, colCnt, i%2, j%2));
 			colCnt += colStep;
@@ -209,8 +209,8 @@ int Terrain::checkPoints(D3DXVECTOR3* linep1,D3DXVECTOR3* linep2, bool shiftStat
 bool Terrain::saveToFile(std::string filename)
 {
 	cimg_library::CImg<> img(rows, cols, 1, 3);
-	for (int i = 0; i < rows; ++i)
-		for (int j = 0; j < cols; ++j)
+	for (int j = 0; j < cols; ++j)
+		for (int i = 0; i < rows; ++i)
 		{
 			img.atXY(i, j, 0, 0) = 255.0/128.0 * (vertices[i + j*rows].y + 64.0);
 			img.atXY(i, j, 0, 1) = 0;

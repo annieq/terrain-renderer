@@ -16,6 +16,8 @@ public:
 	LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
 
 private:
+	void initOFN(OPENFILENAME &ofn);
+
 	Renderer *m_renderer;
 	Keys *m_keys;
 	HWND hWindow;
