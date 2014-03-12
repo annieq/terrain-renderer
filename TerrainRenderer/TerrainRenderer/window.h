@@ -4,6 +4,9 @@
 #include "renderer.h"
 #include "keys.h"
 
+#define SAVE_FILE true
+#define LOAD_FILE false
+
 /// A class for handling the window
 class Window
 {
@@ -16,7 +19,7 @@ public:
 	LRESULT CALLBACK MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
 
 private:
-	void initOFN(OPENFILENAME &ofn);
+	std::string openFile(bool save);
 
 	Renderer *m_renderer;
 	Keys *m_keys;

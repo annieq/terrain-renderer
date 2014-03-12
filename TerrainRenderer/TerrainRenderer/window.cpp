@@ -53,36 +53,12 @@ bool Window::initialize()
 	return true;
 }
 
-// TODO: doprowadziæ do dzia³ania
-void Window::initOFN(OPENFILENAME &ofn)
+std::string Window::openFile(bool save)
 {
-	char szFile[260];       // buffer for file name
-
-	// Initialize OPENFILENAME
-	ZeroMemory(&ofn, sizeof(ofn));
-	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner = hWindow;
-	ofn.lpstrFile = (LPWSTR)szFile;
-	// Set lpstrFile[0] to '\0' so that GetOpenFileName does not 
-	// use the contents of szFile to initialize itself.
-	ofn.lpstrFile[0] = '\0';
-	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = L"Mapa bitowa\0*.BMP\0";
-	ofn.nFilterIndex = 1;
-	ofn.lpstrFileTitle = NULL;
-	ofn.nMaxFileTitle = 0;
-	ofn.lpstrInitialDir = NULL;
-}
-
-void Window::run()
-{
-	MSG msg;
 	OPENFILENAME ofn;
-	std::string str;
+	std::string str = "";
 	char szFile[260];       // buffer for file name
 	HANDLE hf;              // file handle
-	
-	ZeroMemory(&msg, sizeof(MSG));
 
 	// Initialize OPENFILENAME
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -100,6 +76,38 @@ void Window::run()
 	ofn.lpstrInitialDir = NULL;
 	std::string bslash = "\\";
 	std::string dbslash = "\\\\";
+
+	if (save) // open file to save
+	{
+		ofn.lpstrTitle = _T("Zapisz plik");
+		ofn.Flags = OFN_OVERWRITEPROMPT;
+	}
+	else // open file to load
+	{
+		ofn.lpstrTitle = _T("Otwórz plik");
+		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+	}
+	if(    (save && GetSaveFileName(&ofn) == TRUE)
+		|| (!save && GetOpenFileName(&ofn) == TRUE) ) 
+	{
+		str = CW2A(ofn.lpstrFile);
+		for(size_t i=0;i<str.size();++i)
+			if(str[i] == bslash.c_str()[0]) 
+			{
+				str.replace(i,1,dbslash);
+				++i;
+			}
+	}
+	return str;
+}
+
+void Window::run()
+{
+	MSG msg;
+	std::string str;
+	//HANDLE hf;              // file handle
+	
+	ZeroMemory(&msg, sizeof(MSG));
 
     while(true)
     {
@@ -122,33 +130,19 @@ void Window::run()
 			switch (m_keys->checkF())
 			{
 			case 2:
-					m_keys->KeyReleased(F2);
-				ofn.lpstrTitle = _T("Zapisz plik");
-				ofn.Flags = OFN_OVERWRITEPROMPT;
-				if(GetSaveFileName(&ofn) == TRUE) {
-					str = CW2A(ofn.lpstrFile);
-					for(size_t i=0;i<str.size();++i)
-					{
-						if(str[i] == bslash.c_str()[0]) {
-							str.replace(i,1,dbslash);
-							++i;
-						}
-					}
+				m_keys->KeyReleased(F2);
+				str = openFile(SAVE_FILE);
+				if (str.length() > 0)
+				{
 					// tu dodaæ spr czy str koñczy siê na bmp
 					m_renderer->saveTerrain(str);
 				}
 				break;
 			case 3:
 				m_keys->KeyReleased(F3);
-				ofn.lpstrTitle = _T("Otwórz plik");
-				ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-				if(GetOpenFileName(&ofn) == TRUE) {
-					str = CW2A(ofn.lpstrFile);
-					for(size_t i=0;i<str.size();++i)
-						if(str[i] == bslash.c_str()[0]) {
-							str.replace(i,1,dbslash);
-							++i;
-						}
+				str = openFile(LOAD_FILE);
+				if (str.length() > 0)
+				{
 					m_renderer->loadTerrain(str);
 				}
 				break;

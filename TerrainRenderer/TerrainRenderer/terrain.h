@@ -16,9 +16,6 @@ class Terrain
 public:
 	Terrain(ID3D11Device *dev);
 	bool createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices);
-	/*void calculateNormals();
-	void CalculateNormalFromFourTriangles(D3DXVECTOR3* va, D3DXVECTOR3* vb, D3DXVECTOR3* vc, 
-						 D3DXVECTOR3* vd, D3DXVECTOR3* ve, D3DXVECTOR3* normal);*/
 	bool refreshVBuffer(ID3D11Buffer **vBuffer);
 	bool createIndices(ID3D11Buffer **iBuffer, unsigned int *numOfIndices);
 
