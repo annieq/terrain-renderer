@@ -58,7 +58,6 @@ std::string Window::openFile(bool save)
 	OPENFILENAME ofn;
 	std::string str = "";
 	char szFile[260];       // buffer for file name
-	HANDLE hf;              // file handle
 
 	// Initialize OPENFILENAME
 	ZeroMemory(&ofn, sizeof(ofn));

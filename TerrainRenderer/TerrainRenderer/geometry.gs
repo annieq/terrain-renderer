@@ -13,7 +13,7 @@ typedef GIn GOut;
 // Geometry Shader
 ////////////////////////////////////////////////////////////////////////////////
 
-[maxvertexcount(12)]
+[maxvertexcount(3)]
 void GShader(triangle GIn input[3], inout TriangleStream<GOut> outputStream)
 {	
 	GOut output = (GOut)0;
