@@ -133,7 +133,10 @@ void Window::run()
 				str = openFile(SAVE_FILE);
 				if (str.length() > 0)
 				{
-					// tu dodaæ spr czy str koñczy siê na bmp
+					// check file extension
+					std::string ext = str.substr(str.size() - 4, 4);
+					if (ext != ".bmp" && ext != ".BMP")
+						str.append(".bmp");
 					m_renderer->saveTerrain(str);
 				}
 				break;

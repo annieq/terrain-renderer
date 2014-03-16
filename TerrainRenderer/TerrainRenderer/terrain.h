@@ -32,6 +32,7 @@ public:
 private:
 	ID3D11Device *m_device;
 
+protected:
 	int rows, cols;	// number of columns & rows
 	std::vector<Vertex_PosTex> vertices;	// list of vertices
 	std::vector<float> loadedPos;
