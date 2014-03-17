@@ -6,6 +6,12 @@ Terrain::Terrain(ID3D11Device *dev)
 	selectedId.clear();
 }
 
+Terrain::Terrain(ID3D11Device *dev, int rows, int cols)
+	: m_device(dev), rows(rows), cols(cols)
+{
+	selectedId.clear();
+}
+
 bool Terrain::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices)
 {
 	HRESULT hr;
@@ -147,9 +153,16 @@ int Terrain::checkPoints(D3DXVECTOR3* linep1,D3DXVECTOR3* linep2, bool shiftStat
 		{
 			if(!vectorContains(i))
 				selectedId.push_back(i);
+
+			delete raydir;
+			delete vLp1;
+			delete cross;
 			return i;
 		}
 	}
+	delete raydir;
+	delete vLp1;
+	delete cross;
 	return -1;
 }
 

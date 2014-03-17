@@ -286,6 +286,10 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, 
 		D3DXVec3TransformCoord(end,end,inverseviewprojmx);
 
 		m_terr->checkPoints(origin,end,shiftStatus);
+
+		delete origin;
+		delete end;
+		delete inverseviewprojmx;
 	}
 	// draw vertices
 	if (m_numberOfVertices)

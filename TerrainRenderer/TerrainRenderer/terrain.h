@@ -15,6 +15,7 @@ class Terrain
 {
 public:
 	Terrain(ID3D11Device *dev);
+	Terrain(ID3D11Device *dev, int rows, int cols);
 	bool createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices);
 	bool refreshVBuffer(ID3D11Buffer **vBuffer);
 	bool createIndices(ID3D11Buffer **iBuffer, unsigned int *numOfIndices);
