@@ -4,6 +4,7 @@
 #include "common.h"
 #include "shader.h"
 #include "terrain.h"
+#include "faultformation.h"
 #include "camera.h"
 #include "textures.h"
 

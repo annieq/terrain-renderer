@@ -18,7 +18,7 @@ bool FaultForm::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertic
 	float rowStep = 2.0f * (float)TERR_WIDTH/(float)rows;
 	float colStep = 2.0f * (float)TERR_HEIGHT/(float)cols;
 
-	vector<vector<float>> heights = formTerrain(rows, cols);
+	vector<vector<float>> heights = formTerrain(rows, cols, 10);
 	for (int j = 0; j < cols; ++j)
 	{
 		for (int i = 0; i < rows; ++i)
@@ -42,7 +42,11 @@ bool FaultForm::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertic
 vector<vector<float>> FaultForm::formTerrain(int rows, int cols, int iter)
 {
 	int x1, x2, y1, y2; // 2 points
-	float a, b, c, mi;		// line
+	float a, b, c;		// line
+	float disp = 15.0;
+	float step = disp/(float)iter;
+	float wave = 250.0;
+	float dist;
 
 	// 2D array for heights
 	vector<vector<float>> heights;
@@ -66,23 +70,26 @@ vector<vector<float>> FaultForm::formTerrain(int rows, int cols, int iter)
 		a = y2 - y1;
 		b = -(x2 - x1);
 		c = - x1*(y2 - y1) + y1*(x2 - x1);
-		// normalize
-		mi = (double)1/sqrt(a*a + b*b);
-		if (c > 0.0)
-			mi *= -1.0;
-		a *= mi;
-		b *= mi;
-		c *= mi;
 
 		// calculate heights
 		for (int i=0; i<cols; ++i)
 			for (int j=0; j<rows; ++j)
 			{
-				if (a*j + b*i - c > 0)
-					heights[i][j] += 1.0;
+				//if (a*j + b*i + c > 0)
+				//	heights[i][j] += disp;
+				//else
+				//	heights[i][j] -= disp;
+
+				// sine function
+				dist = a*j + b*i + c;
+				if (dist > wave)
+					heights[i][j] += disp;
+				else if (dist < -wave)
+					heights[i][j] -= disp;
 				else
-					heights[i][j] -= 1.0;
+					heights[i][j] += sin(dist * 3.14) * disp/2;
 			}
+		//disp -= step;
 	}
 	return heights;
 }

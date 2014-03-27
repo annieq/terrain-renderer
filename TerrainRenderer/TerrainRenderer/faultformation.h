@@ -7,7 +7,7 @@
 
 using std::vector;
 
-class FaultForm : Terrain
+class FaultForm : public Terrain
 {
 public:
 	FaultForm(ID3D11Device *dev);

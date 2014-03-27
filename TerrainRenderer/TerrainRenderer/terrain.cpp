@@ -1,7 +1,7 @@
 #include "terrain.h"
 
 Terrain::Terrain(ID3D11Device *dev)
-	: m_device(dev), rows(160), cols(160)
+	: m_device(dev), rows(256), cols(256)
 {
 	selectedId.clear();
 }
