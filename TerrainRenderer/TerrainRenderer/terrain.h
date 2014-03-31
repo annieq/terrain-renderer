@@ -8,8 +8,8 @@
 #include <string>
 #include <fstream>
 
-#define TERR_WIDTH 1000
-#define TERR_HEIGHT 1000
+#define TERR_WIDTH 500
+#define TERR_HEIGHT 500
 
 class Terrain
 {
