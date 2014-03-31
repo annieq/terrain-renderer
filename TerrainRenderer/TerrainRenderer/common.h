@@ -39,4 +39,7 @@
 #define FRAMES_PER_SECOND 50
 #define SKIP_TICKS (1000 / FRAMES_PER_SECOND)
 
+// math :P
+#define PI 3.14159265358979323846
+
 #endif

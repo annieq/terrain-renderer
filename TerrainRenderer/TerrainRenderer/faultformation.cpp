@@ -87,7 +87,8 @@ vector<vector<float>> FaultForm::formTerrain(int rows, int cols, int iter)
 				else if (dist < -wave)
 					heights[i][j] -= disp;
 				else
-					heights[i][j] += sin(dist * 3.14) * disp/2;
+					//heights[i][j] += sin(dist * 3.14) * disp/2;
+					heights[i][j] += -disp * cos(0.5*wave * PI + heights[i][j]);
 			}
 		//disp -= step;
 	}
