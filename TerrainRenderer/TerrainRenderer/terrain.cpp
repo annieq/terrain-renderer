@@ -168,11 +168,17 @@ int Terrain::checkPoints(D3DXVECTOR3* linep1,D3DXVECTOR3* linep2, bool shiftStat
 
 bool Terrain::saveToFile(std::string filename)
 {
+	double value;
 	cimg_library::CImg<> img(rows, cols, 1, 3);
 	for (int j = 0; j < cols; ++j)
 		for (int i = 0; i < rows; ++i)
 		{
-			img.atXY(i, j, 0, 0) = 255.0/128.0 * (vertices[i + j*rows].y + 64.0);
+			value = 255.0/128.0 * (vertices[i + j*rows].y + 64.0);
+			if (value > 255.0)
+				value = 255.0;
+			else if (value < 0)
+				value = 0.0;
+			img.atXY(i, j, 0, 0) = value;
 			img.atXY(i, j, 0, 1) = 0;
 			img.atXY(i, j, 0, 2) = 0;
 		}
