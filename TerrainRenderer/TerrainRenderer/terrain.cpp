@@ -173,7 +173,8 @@ bool Terrain::saveToFile(std::string filename)
 	for (int j = 0; j < cols; ++j)
 		for (int i = 0; i < rows; ++i)
 		{
-			value = 255.0/128.0 * (vertices[i + j*rows].y + 64.0);
+			//value = 255.0/128.0 * (vertices[i + j*rows].y + 64.0);
+			value = vertices[i + j*rows].y + 128.0;
 			if (value > 255.0)
 				value = 255.0;
 			else if (value < 0)
@@ -198,7 +199,8 @@ bool Terrain::loadFromFile(std::string filename)
 	for (int i = 0; i < img.size(); ++i)
 	{
 		pix = img.at(i);
-		loadedPos.push_back( 128.0/255.0 * pix - 64.0 );
+		//loadedPos.push_back( 128.0/255.0 * pix - 64.0 );
+		loadedPos.push_back(pix - 128.0);
 	}
 	rows = img.width();
 	cols = img.height();

@@ -15,7 +15,7 @@ public:
 	bool createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices);
 
 private:
-	vector<vector<float>> formTerrain(int rows, int cols, int iter=1000);
+	vector<vector<float>> formTerrain(int rows, int cols, int iter=200);
 };
 
 #endif

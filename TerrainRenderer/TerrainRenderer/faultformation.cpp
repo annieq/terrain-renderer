@@ -43,7 +43,7 @@ vector<vector<float>> FaultForm::formTerrain(int rows, int cols, int iter)
 {
 	int x1, x2, y1, y2; // 2 points
 	float a, b, c;		// line
-	float disp = 10.0;
+	float disp = 8.0;
 	float step = disp/(float)iter;
 	float wave = 750.0;
 	float dist;
@@ -86,6 +86,21 @@ vector<vector<float>> FaultForm::formTerrain(int rows, int cols, int iter)
 			}
 		disp -= step;
 	}
+	// rescale heights
+	float min = heights[0][0], max = heights[0][0];
+	for (int i=0; i<cols; ++i)
+		for (int j=0; j<rows; ++j)
+		{
+			if (heights[i][j] < min)
+				min = heights[i][j];
+			else if (heights[i][j] > max)
+				max = heights[i][j];
+		}
+	for (int i=0; i<cols; ++i)
+		for (int j=0; j<rows; ++j)
+		{
+			heights[i][j] = 255.0/(max-min) * (heights[i][j] - min) - 128.0;
+		}
 
 	return heights;
 }

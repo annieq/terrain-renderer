@@ -97,8 +97,8 @@ bool Renderer::initDX(HWND hWnd)
     D3DXMatrixIdentity(&m_worldMatrix);
 	
 	// draw a terrain (actually set vertex & index buffers :P)
-	//m_terr = new FaultForm(m_device);
-	m_terr = new Terrain(m_device);
+	m_terr = new FaultForm(m_device);
+	//m_terr = new Terrain(m_device);
 	if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
 		return false;
 	if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
