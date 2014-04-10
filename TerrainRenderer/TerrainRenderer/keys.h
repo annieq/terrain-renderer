@@ -22,6 +22,12 @@
 #define F2 113
 #define F3 114
 #define F4 115
+
+#define F5 116
+#define F6 117
+#define F7 118
+#define F8 119
+
 // ....
 // #define F12 123
 

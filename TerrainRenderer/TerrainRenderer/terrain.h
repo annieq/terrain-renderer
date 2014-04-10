@@ -30,6 +30,8 @@ public:
 	bool loadFromFile(std::string filename);
 	void reset();
 
+	void release();
+
 private:
 	ID3D11Device *m_device;
 

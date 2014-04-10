@@ -220,3 +220,9 @@ void Terrain::reset()
 	for (int i = 0; i < rows*cols; ++i)
 		loadedPos.push_back(0.0);
 }
+
+void Terrain::release()
+{
+	if (m_device)
+		m_device->Release();
+}

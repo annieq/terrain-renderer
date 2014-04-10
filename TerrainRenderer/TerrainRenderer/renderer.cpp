@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include "keys.h"
 
 Renderer::Renderer()
 {
@@ -97,8 +98,8 @@ bool Renderer::initDX(HWND hWnd)
     D3DXMatrixIdentity(&m_worldMatrix);
 	
 	// draw a terrain (actually set vertex & index buffers :P)
-	m_terr = new FaultForm(m_device);
-	//m_terr = new Terrain(m_device);
+	//m_terr = new FaultForm(m_device);
+	m_terr = new Terrain(m_device);
 	if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
 		return false;
 	if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
@@ -127,6 +128,30 @@ bool Renderer::initDX(HWND hWnd)
 
 	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
 
+	return true;
+}
+
+bool Renderer::changeTerrain(short type)
+{
+	if (type == F5)
+	{
+		m_terr->release();
+		m_terr = new Terrain(m_device);
+		if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
+			return false;
+		if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
+			return false;
+	}
+	else if (type == F6)
+	{
+		m_terr->release();
+		m_terr = new FaultForm(m_device);
+		if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
+			return false;
+		if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
+		return false;
+	}
+	//else if (type == F7)
 	return true;
 }
 
@@ -311,6 +336,7 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, 
 	oss << "Camera:\tPOS: x = " << cpos.x << " y = " << cpos.y << " z = " << cpos.z
 		<< ";\tROT: x = " << crot.x << " y = " << crot.y << " z = " << crot.z << std:: endl;
 	oss << "F1 - wireframe\tF2 - save\tF3 - load\tF4 - reset" << std::endl;
+	oss << "F5 - base terrain\tF6 - fault formation\tF7 - [blank]\tF8 - [blank]" << std::endl;
 	oss << "Selected vertices: ";
 	m_terr->drawSelectedId(oss);
 
@@ -353,7 +379,7 @@ void Renderer::shutdown()
 	m_textures.release();
 
 	if (m_terr)
-		delete m_terr;
+		m_terr->release();
 	if (m_swapChain)
 		m_swapChain->Release();
 	if (m_renderTargetView)

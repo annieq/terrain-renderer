@@ -151,6 +151,18 @@ void Window::run()
 			case 4:
 				m_renderer->loadTerrain();
 				break;
+			case 5:
+				m_renderer->changeTerrain(F5);
+				break;
+			case 6:
+				m_renderer->changeTerrain(F6);
+				break;
+			case 7:
+				m_renderer->changeTerrain(F7);
+				break;
+			case 8:
+				m_renderer->changeTerrain(F8);
+				break;
 			}
 
 			bool shiftstate = false;

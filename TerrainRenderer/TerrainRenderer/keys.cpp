@@ -77,6 +77,10 @@ int Keys::checkF()
 		return 3;
 	if (m_keyboardState[F4])
 		return 4;
+	if (m_keyboardState[F5])
+		return 5;
+	if (m_keyboardState[F6])
+		return 6;
 
 	return -1;
 }
