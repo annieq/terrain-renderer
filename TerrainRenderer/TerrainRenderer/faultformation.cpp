@@ -18,7 +18,9 @@ bool FaultForm::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertic
 	float rowStep = 2.0f * (float)TERR_WIDTH/(float)rows;
 	float colStep = 2.0f * (float)TERR_HEIGHT/(float)cols;
 
-	vector<vector<float>> heights = formTerrain(rows, cols);
+	FF_Params params;
+	//params.ITERATIONS = 10;
+	vector<vector<float>> heights = formTerrain(rows, cols, params);
 	for (int j = 0; j < cols; ++j)
 	{
 		for (int i = 0; i < rows; ++i)
@@ -39,13 +41,12 @@ bool FaultForm::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertic
 	return true;
 }
 
-vector<vector<float>> FaultForm::formTerrain(int rows, int cols, int iter)
+vector<vector<float>> FaultForm::formTerrain(int rows, int cols, FF_Params par)
 {
 	int x1, x2, y1, y2; // 2 points
 	float a, b, c;		// line
-	float disp = 8.0;
-	float step = disp/(float)iter;
-	float wave = 750.0;
+	float disp = par.DISPLACEMENT;
+	float step = disp/(float)par.ITERATIONS;
 	float dist;
 
 	// 2D array for heights
@@ -61,7 +62,7 @@ vector<vector<float>> FaultForm::formTerrain(int rows, int cols, int iter)
 	srand(time(NULL));
 
 	// main loop
-	for (int it=0; it<iter; ++it)
+	for (int it=0; it<par.ITERATIONS; ++it)
 	{
 		// get 2 random points
 		x1 = rand() % rows; y1 = rand() % cols;
@@ -77,12 +78,12 @@ vector<vector<float>> FaultForm::formTerrain(int rows, int cols, int iter)
 			{
 				// sine function
 				dist = a*j + b*i + c;
-				if (dist > wave)
+				if (dist > par.WAVE)
 					heights[i][j] += disp;
-				else if (dist < -wave)
+				else if (dist < -par.WAVE)
 					heights[i][j] -= disp;
 				else
-					heights[i][j] += disp * sin(1.0/(float)(2*wave) * PI * dist - 0.2*wave*PI);
+					heights[i][j] += disp * sin(1.0/(float)(2*par.WAVE) * PI * dist - 0.2*par.WAVE*PI);
 			}
 		disp -= step;
 	}

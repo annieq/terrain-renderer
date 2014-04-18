@@ -15,6 +15,7 @@
     <ClCompile Include="faultformation.cpp" />
     <ClCompile Include="keys.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="perlinnoise.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="terrain.cpp" />
@@ -27,6 +28,7 @@
     <ClInclude Include="external\CImg.h" />
     <ClInclude Include="faultformation.h" />
     <ClInclude Include="keys.h" />
+    <ClInclude Include="perlinnoise.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="terrain.h" />
