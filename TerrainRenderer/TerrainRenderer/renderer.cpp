@@ -151,7 +151,9 @@ bool Renderer::changeTerrain(short type)
 		if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
 		return false;
 	}
-	//else if (type == F7)
+	else if (type == F7)
+	{
+	}
 	return true;
 }
 
@@ -278,7 +280,7 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, 
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
 
-	// Create the buffer. (TU BY TRZEBA ZWRACAC HR)
+	// Create the buffer.
 	hr = m_device->CreateBuffer( &cbDesc, &InitData, &m_mBuffer );
 
 
@@ -292,6 +294,7 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, 
 	m_deviceContext->IASetIndexBuffer(m_iBuffer, DXGI_FORMAT_R16_UINT, 0);
 	m_deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
+	// set wireframe (or not)
 	m_deviceContext->RSSetState(m_wireframe ? m_rastWire : m_rastSolid);
 
 	float x = 0.0f,y = 0.0f;

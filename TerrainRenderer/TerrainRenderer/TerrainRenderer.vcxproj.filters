@@ -85,13 +85,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="geometry.gs">
+    <None Include="base.gs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="pixel.ps">
+    <None Include="base.ps">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="vertex.vs">
+    <None Include="base.vs">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
