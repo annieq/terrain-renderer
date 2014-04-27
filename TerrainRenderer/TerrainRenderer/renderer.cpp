@@ -13,7 +13,7 @@ Renderer::Renderer()
 
 	m_backBuffer = 0;
 	m_renderTargetView = 0;
-	m_vBuffer = m_iBuffer = m_mBuffer = 0;
+	m_vBuffer = m_iBuffer = 0;
 	m_rastSolid = m_rastWire = 0;
 
 	m_textures = Textures();
@@ -96,9 +96,12 @@ bool Renderer::initDX(HWND hWnd)
 
     // Initialize the world matrix to the identity matrix.
     D3DXMatrixIdentity(&m_worldMatrix);
+
+	// init const buffers
+	if (!createCBuffers())
+		return false;
 	
 	// draw a terrain (actually set vertex & index buffers :P)
-	//m_terr = new FaultForm(m_device);
 	m_terr = new Terrain(m_device);
 	if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
 		return false;
@@ -127,6 +130,44 @@ bool Renderer::initDX(HWND hWnd)
 										m_depthStencilView );     // Depth stencil view for the render targ
 
 	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
+
+	return true;
+}
+
+bool Renderer::createCBuffers()
+{
+	HRESULT hr;
+	// Create Constant Buffers and send world and viewprojection matrix through it
+	VS_CBUF_MATRIX mConstData;
+
+	mConstData.worldMatrix = m_worldMatrix;
+	m_camera->GetViewMatrix(m_viewMatrix);
+	D3DXMatrixMultiply(&(mConstData.viewProjMatrix), &m_viewMatrix, &m_projectionMatrix);
+
+	// Fill in a buffer description.
+	//D3D11_BUFFER_DESC cbDesc;
+	m_cbufMatrixDesc.ByteWidth = sizeof( VS_CBUF_MATRIX );
+	m_cbufMatrixDesc.Usage = D3D11_USAGE_DYNAMIC;
+	m_cbufMatrixDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	m_cbufMatrixDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	m_cbufMatrixDesc.MiscFlags = 0;
+	m_cbufMatrixDesc.StructureByteStride = 0;
+
+	// Fill in the subresource data.
+	D3D11_SUBRESOURCE_DATA InitData;
+	InitData.pSysMem = &mConstData;
+	InitData.SysMemPitch = 0;
+	InitData.SysMemSlicePitch = 0;
+
+	// Create the buffer.
+	ID3D11Buffer *cBuffer = 0;
+	hr = m_device->CreateBuffer( &m_cbufMatrixDesc, &InitData, &cBuffer );
+	if (FAILED(hr))
+		return false;
+
+	// Set the buffer.
+	m_deviceContext->VSSetConstantBuffers( 0, 1, &cBuffer );
+	cBuffer->Release();
 
 	return true;
 }
@@ -258,21 +299,12 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, 
 	m_camera->Move(move);
 	m_camera->Rotate(rotate);
 	
-	// Create Constant Buffers and send world and viewprojection matrix through it
-	VS_CONSTANT_BUFFER mConstData;
+	// update constant buffer
+	VS_CBUF_MATRIX mConstData;
 
 	mConstData.worldMatrix = m_worldMatrix;
 	m_camera->GetViewMatrix(m_viewMatrix);
 	D3DXMatrixMultiply(&(mConstData.viewProjMatrix), &m_viewMatrix, &m_projectionMatrix);
-
-	// Fill in a buffer description.
-	D3D11_BUFFER_DESC cbDesc;
-	cbDesc.ByteWidth = sizeof( VS_CONSTANT_BUFFER );
-	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
-	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	cbDesc.MiscFlags = 0;
-	cbDesc.StructureByteStride = 0;
 
 	// Fill in the subresource data.
 	D3D11_SUBRESOURCE_DATA InitData;
@@ -281,11 +313,12 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, 
 	InitData.SysMemSlicePitch = 0;
 
 	// Create the buffer.
-	hr = m_device->CreateBuffer( &cbDesc, &InitData, &m_mBuffer );
-
+	ID3D11Buffer *cBuffer = 0;
+	hr = m_device->CreateBuffer( &m_cbufMatrixDesc, &InitData, &cBuffer );
 
 	// Set the buffer.
-	m_deviceContext->VSSetConstantBuffers( 0, 1, &m_mBuffer );
+	m_deviceContext->VSSetConstantBuffers( 0, 1, &cBuffer );
+	cBuffer->Release();
 
 	// configure Input Assembler stage
 	UINT stride = sizeof(Vertex_PosTex);
@@ -403,8 +436,8 @@ void Renderer::shutdown()
 		m_vBuffer->Release();
 	if (m_iBuffer)
 		m_iBuffer->Release();
-	if (m_mBuffer)
-		m_mBuffer->Release();
+	//if (m_mBuffer)
+	//	m_mBuffer->Release();
 	if (m_rastSolid)
 		m_rastSolid->Release();
 	if (m_rastWire)

@@ -25,6 +25,7 @@ public:
 
 private:
 	bool createRasterizerState();
+	bool createCBuffers();
 	HRESULT createDepthScencilTexture();
 	HRESULT createDepthScencilView();
 	HRESULT createDepthScencilState();
@@ -44,7 +45,7 @@ private:
 	ID3D11DepthStencilState * m_DSState;
 	ID3D11DepthStencilView* m_depthStencilView;
 	ID3D11RenderTargetView *m_renderTargetView;
-	ID3D11Buffer *m_vBuffer, *m_iBuffer, *m_mBuffer;
+	ID3D11Buffer *m_vBuffer, *m_iBuffer; //, *m_mBuffer;
 	ID3D11RasterizerState *m_rastSolid, *m_rastWire;
 
 	HWND m_windowHandle;
@@ -57,16 +58,24 @@ private:
 	D3DXMATRIX m_worldMatrix;
 	D3DXMATRIX m_viewMatrix;
 
+	// for const buffers
+	D3D11_BUFFER_DESC m_cbufMatrixDesc;
+
 	unsigned int m_numberOfVertices, m_numberOfIndices;
 	bool m_wireframe;
 
 	DWORD m_NextGameTick;	// time for next frame in ms
 };
 
-typedef struct VS_CONSTANT_BUFFER
+typedef struct VS_CBUF_MATRIX
 {
 	D3DXMATRIX worldMatrix;
 	D3DXMATRIX viewProjMatrix;
 } VS_CONSTANT_BUFFER;
+
+typedef struct VS_CBUF_PERLIN
+{
+	// TODO
+}
 
 #endif
