@@ -75,7 +75,8 @@ typedef struct VS_CBUF_MATRIX
 
 typedef struct VS_CBUF_PERLIN
 {
-	// TODO
-}
+	int perm[256];
+	D3DVECTOR grad[16];
+};
 
 #endif
