@@ -3,21 +3,30 @@
 
 #include "common.h"
 
+enum ShaderType;
+
 // A class for handling shaders
 class Shader
 {
 public:
 	Shader();
 	void init(ID3D11Device *dev, ID3D11DeviceContext *devContext, std::vector<ID3D11ShaderResourceView*> texture, ID3D11SamplerState *sampleState);
+	void updateShader(ShaderType type, LPCWSTR filename);
 	void release();
 
 private:
+	ID3D11Device *m_device;
+	ID3D11DeviceContext *m_deviceContext;
 	ID3D11VertexShader *m_vShader;
 	ID3D11GeometryShader *m_gShader;
 	ID3D11PixelShader *m_pShader;
 	ID3D11InputLayout *m_inputLayout;
 };
 
+enum ShaderType
+{
+	VSHADER, GSHADER, PSHADER
+};
 
 // vertex type with texture
 struct Vertex_PosTex

@@ -236,6 +236,7 @@ bool Renderer::changeTerrain(short type)
 	}
 	else if (type == F7)
 	{
+		m_shader.updateShader(VSHADER, L"../TerrainRenderer/perlin.vs");
 	}
 	return true;
 }
