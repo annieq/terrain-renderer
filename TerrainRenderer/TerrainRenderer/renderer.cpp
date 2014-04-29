@@ -218,6 +218,7 @@ bool Renderer::changeTerrain(short type)
 {
 	if (type == F5)
 	{
+		m_shader.updateShader(VSHADER, L"../TerrainRenderer/base.vs");
 		m_terr->release();
 		m_terr = new Terrain(m_device);
 		if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
@@ -227,6 +228,7 @@ bool Renderer::changeTerrain(short type)
 	}
 	else if (type == F6)
 	{
+		m_shader.updateShader(VSHADER, L"../TerrainRenderer/base.vs");
 		m_terr->release();
 		m_terr = new FaultForm(m_device);
 		if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))

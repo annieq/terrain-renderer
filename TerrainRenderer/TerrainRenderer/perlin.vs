@@ -20,23 +20,10 @@ cbuffer cb_mx : register(b0)
 
 cbuffer cb_perlin : register(b1)
 {
-	int perm[256];
-	float3 grad[16];
+	int permut[256];
+	float3 gradient[16];
 };
 
-
-VOut VShader(VIn input)
-{
-    VOut output;
-	input.position.y = inoise(float3(0, input.position.y, 0);
-	output.worldPos = mul(worldMatrix, float4(input.position.xyz, 1.0)).xyz;
-	output.clipPos = mul(viewProjectionMatrix, float4(output.worldPos.xyz, 1.0));	
-	output.worldNormal = mul(float3(0,1,0),worldMatrix);
-
-	output.texCoord = input.texCoord;
-
-    return output;
-}
 
 float3 fade(float3 t)
 {
@@ -54,7 +41,7 @@ float perm(float x)
 {
 
   //return tex1D(permSampler, x / 256.0) * 256;
-  return perm[x];
+  return permut[x];
 }
 
 
@@ -64,7 +51,7 @@ float grad(float x, float3 p)
 {
 
   //return dot(tex1D(gradSampler, x), p);
-  return dot(grad[x], p);
+  return dot(gradient[x], p);
 }
 
 
@@ -125,4 +112,17 @@ float inoise(float3 p)
 
     f.z);
 
+}
+
+VOut VShader(VIn input)
+{
+    VOut output;
+	input.position.y += inoise(input.position);
+	output.worldPos = mul(worldMatrix, float4(input.position.xyz, 1.0)).xyz;
+	output.clipPos = mul(viewProjectionMatrix, float4(output.worldPos.xyz, 1.0));	
+	output.worldNormal = mul(float3(0,1,0),worldMatrix);
+
+	output.texCoord = input.texCoord;
+
+    return output;
 }

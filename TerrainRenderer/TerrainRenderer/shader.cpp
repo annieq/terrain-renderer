@@ -43,11 +43,13 @@ void Shader::init(ID3D11Device *dev, ID3D11DeviceContext *devContext, std::vecto
 
 void Shader::updateShader(ShaderType type, LPCWSTR filename)
 {
-	ID3D10Blob *shaderBlob;
+	ID3D10Blob *shaderBlob, *errorMsg;
+	char *errors;
 	switch (type)
 	{
 	case VSHADER:
-		D3DX11CompileFromFile(filename, NULL, NULL, "VShader", "vs_5_0", NULL, NULL, NULL, &shaderBlob, NULL, NULL);
+		D3DX11CompileFromFile(filename, NULL, NULL, "VShader", "vs_5_0", NULL, NULL, NULL, &shaderBlob, &errorMsg, NULL);
+		errors = (char*)(errorMsg->GetBufferPointer());
 		m_device->CreateVertexShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &m_vShader);
 		m_deviceContext->VSSetShader(m_vShader, NULL, 0);
 		break;
