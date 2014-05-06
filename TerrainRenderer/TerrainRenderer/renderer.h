@@ -71,12 +71,12 @@ typedef struct VS_CBUF_MATRIX
 {
 	D3DXMATRIX worldMatrix;
 	D3DXMATRIX viewProjMatrix;
-} VS_CONSTANT_BUFFER;
+};
 
 typedef struct VS_CBUF_PERLIN
 {
+	D3DXVECTOR3 grad[16];
 	int perm[256];
-	D3DVECTOR grad[16];
 };
 
 #endif

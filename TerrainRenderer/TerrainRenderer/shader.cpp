@@ -59,7 +59,8 @@ void Shader::updateShader(ShaderType type, LPCWSTR filename)
 		m_deviceContext->GSSetShader(m_gShader, NULL, 0);
 		break;
 	case PSHADER:
-		D3DX11CompileFromFile(filename, NULL, NULL, "PShader", "ps_5_0", NULL, NULL, NULL, &shaderBlob, NULL, NULL);
+		D3DX11CompileFromFile(filename, NULL, NULL, "PShader", "ps_5_0", NULL, NULL, NULL, &shaderBlob, &errorMsg, NULL);
+		errors = (char*)(errorMsg->GetBufferPointer());
 		m_device->CreatePixelShader(shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL, &m_pShader);
 		m_deviceContext->PSSetShader(m_pShader, NULL, 0);
 		break;

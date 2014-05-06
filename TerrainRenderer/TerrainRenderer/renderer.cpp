@@ -161,11 +161,11 @@ bool Renderer::createCBuffers()
 	   251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,
 	   49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
 	   138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180 };
-	D3DVECTOR grad[16] = {
-		1,1,0,    -1,1,0,    1,-1,0,    -1,-1,0,
-		1,0,1,    -1,0,1,    1,0,-1,    -1,0,-1,
-		0,1,1,    0,-1,1,    0,1,-1,    0,-1,-1,
-		1,1,0,    0,-1,1,    -1,1,0,    0,-1,-1
+	D3DXVECTOR3 grad[16] = {
+		D3DXVECTOR3(1,1,0),    D3DXVECTOR3(-1,1,0),    D3DXVECTOR3(1,-1,0),    D3DXVECTOR3(-1,-1,0),
+		D3DXVECTOR3(1,0,1),    D3DXVECTOR3(-1,0,1),    D3DXVECTOR3(1,0,-1),    D3DXVECTOR3(-1,0,-1),
+		D3DXVECTOR3(0,1,1),    D3DXVECTOR3(0,-1,1),    D3DXVECTOR3(0,1,-1),    D3DXVECTOR3(0,-1,-1),
+		D3DXVECTOR3(1,1,0),    D3DXVECTOR3(0,-1,1),    D3DXVECTOR3(-1,1,0),    D3DXVECTOR3(0,-1,-1)
 	};
 	
 	for (int i=0; i<256; ++i)
@@ -234,11 +234,18 @@ bool Renderer::changeTerrain(short type)
 		if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
 			return false;
 		if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
-		return false;
+			return false;
 	}
 	else if (type == F7)
 	{
 		m_shader.updateShader(VSHADER, L"../TerrainRenderer/perlin.vs");
+		//m_shader.updateShader(PSHADER, L"../TerrainRenderer/perlin.ps");
+		m_terr->release();
+		m_terr = new Terrain(m_device);
+		if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
+			return false;
+		if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
+			return false;
 	}
 	return true;
 }
