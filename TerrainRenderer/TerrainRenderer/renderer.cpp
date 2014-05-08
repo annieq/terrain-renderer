@@ -242,10 +242,17 @@ bool Renderer::changeTerrain(short type)
 	}
 	else if (type == F7)
 	{
-		m_shader.updateShader(VSHADER, L"../TerrainRenderer/perlin.vs");
-		//m_shader.updateShader(PSHADER, L"../TerrainRenderer/perlin.ps");
+		//m_shader.updateShader(VSHADER, L"../TerrainRenderer/perlin.vs");
+		////m_shader.updateShader(PSHADER, L"../TerrainRenderer/perlin.ps");
+		//m_terr->release();
+		//m_terr = new Terrain(m_device);
+		//if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
+		//	return false;
+		//if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
+		//	return false;
+		m_shader.updateShader(VSHADER, L"../TerrainRenderer/base.vs");
 		m_terr->release();
-		m_terr = new Terrain(m_device);
+		m_terr = new ImprovedPerlinNoise(m_device);
 		if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
 			return false;
 		if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))

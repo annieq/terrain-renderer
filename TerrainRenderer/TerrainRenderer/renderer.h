@@ -5,6 +5,7 @@
 #include "shader.h"
 #include "terrain.h"
 #include "faultformation.h"
+#include "perlinnoise.h"
 #include "camera.h"
 #include "textures.h"
 
