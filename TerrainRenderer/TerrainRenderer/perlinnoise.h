@@ -27,11 +27,16 @@ private:
 
 struct IMP_Params
 {
-	//int OCTAVES;
+	int OCTAVES;		// number of octaves
+	int FREQ;			// start frequency
+	float DISPLACEMENT; // starting displacement multiplier
 
 	// default parameters' values
 	IMP_Params()
 	{
+		OCTAVES = 3;
+		FREQ = 64;
+		DISPLACEMENT = 20;
 	}
 };
 

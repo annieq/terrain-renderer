@@ -19,7 +19,8 @@ bool ImprovedPerlinNoise::createVertices(ID3D11Buffer **vBuffer, unsigned int *n
 	float colStep = 2.0f * (float)TERR_HEIGHT/(float)cols;
 
 	IMP_Params params;
-	//params.ITERATIONS = 10;
+	params.OCTAVES = 5;
+	params.DISPLACEMENT = 50;
 	vector<vector<float>> heights = formTerrain(rows, cols, params);
 	for (int j = 0; j < cols; ++j)
 	{
@@ -43,7 +44,7 @@ bool ImprovedPerlinNoise::createVertices(ID3D11Buffer **vBuffer, unsigned int *n
 
 vector<vector<float>> ImprovedPerlinNoise::formTerrain(int rows, int cols, IMP_Params params)
 {
-
+	float freq, disp;
 	// 2D array for heights
 	vector<vector<float>> heights;
 	heights.resize(cols);
@@ -52,9 +53,17 @@ vector<vector<float>> ImprovedPerlinNoise::formTerrain(int rows, int cols, IMP_P
 	// calculate noise for every vertex
 	for (int i=0; i<cols; ++i)
 		for (int j=0; j<rows; ++j)
-			heights[i][j] = 10* noise(256.0/5.0*i, 256.0/5.0*j);	// heights[height][width]
-
-
+		{
+			freq = params.FREQ;
+			disp = params.DISPLACEMENT;
+			heights[i][j] = -disp/2.0;
+			for (int k=0; k<params.OCTAVES; ++k)
+			{
+				heights[i][j] += disp * noise((float)i/freq, (float)j/freq);	// heights[height][width]
+				disp /= 2.0;
+				freq /= 2.0;
+			}
+		}
 	return heights;
 }
 

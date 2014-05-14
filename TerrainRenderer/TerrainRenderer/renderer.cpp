@@ -434,8 +434,8 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, 
 	oss << APPTITLE << std::endl;
 	oss << "Camera:\tPOS: x = " << cpos.x << " y = " << cpos.y << " z = " << cpos.z
 		<< ";\tROT: x = " << crot.x << " y = " << crot.y << " z = " << crot.z << std:: endl;
-	oss << "F1 - wireframe\tF2 - save\tF3 - load\tF4 - reset" << std::endl;
-	oss << "F5 - base terrain\tF6 - fault formation\tF7 - [blank]\tF8 - [blank]" << std::endl;
+	oss << "F1 - wireframe\tF2 - save\t\tF3 - load\t\tF4 - reset" << std::endl;
+	oss << "F5 - base terrain\tF6 - Fault Formation\t\tF7 - Improved Perlin Noise\tF8 - [blank]" << std::endl;
 	oss << "Selected vertices: ";
 	m_terr->drawSelectedId(oss);
 
