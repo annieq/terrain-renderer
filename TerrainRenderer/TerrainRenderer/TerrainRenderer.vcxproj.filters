@@ -48,6 +48,9 @@
     <ClCompile Include="perlinnoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="diamondsquare.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="perlinnoise.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="diamondsquare.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

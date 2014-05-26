@@ -149,18 +149,23 @@ void Window::run()
 				}
 				break;
 			case 4:
+				m_keys->KeyReleased(F4);
 				m_renderer->loadTerrain();
 				break;
 			case 5:
+				m_keys->KeyReleased(F5);
 				m_renderer->changeTerrain(F5);
 				break;
 			case 6:
+				m_keys->KeyReleased(F6);
 				m_renderer->changeTerrain(F6);
 				break;
 			case 7:
+				m_keys->KeyReleased(F7);
 				m_renderer->changeTerrain(F7);
 				break;
 			case 8:
+				m_keys->KeyReleased(F8);
 				m_renderer->changeTerrain(F8);
 				break;
 			}

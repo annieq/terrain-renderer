@@ -6,6 +6,7 @@
 #include "terrain.h"
 #include "faultformation.h"
 #include "perlinnoise.h"
+#include "diamondsquare.h"
 #include "camera.h"
 #include "textures.h"
 

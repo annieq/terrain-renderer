@@ -258,6 +258,16 @@ bool Renderer::changeTerrain(short type)
 		if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
 			return false;
 	}
+	else if (type == F8)
+	{
+		m_shader.updateShader(VSHADER, L"../TerrainRenderer/base.vs");
+		m_terr->release();
+		m_terr = new DiamondSquare(m_device);
+		if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
+			return false;
+		if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
+			return false;
+	}
 	return true;
 }
 
@@ -435,7 +445,7 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, 
 	oss << "Camera:\tPOS: x = " << cpos.x << " y = " << cpos.y << " z = " << cpos.z
 		<< ";\tROT: x = " << crot.x << " y = " << crot.y << " z = " << crot.z << std:: endl;
 	oss << "F1 - wireframe\tF2 - save\t\tF3 - load\t\tF4 - reset" << std::endl;
-	oss << "F5 - base terrain\tF6 - Fault Formation\t\tF7 - Improved Perlin Noise\tF8 - [blank]" << std::endl; 
+	oss << "F5 - base terrain\tF6 - Fault Formation\t\tF7 - Improved Perlin Noise\tF8 - Diamond-Square" << std::endl; 
 	oss << "Selected vertices: ";
 	m_terr->drawSelectedId(oss);
 
