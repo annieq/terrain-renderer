@@ -21,16 +21,16 @@ private:
 
 struct DS_Params
 {
-	//int OCTAVES;		// number of octaves
-	//int FREQ;			// start frequency
-	//float DISPLACEMENT; // starting displacement multiplier
+	float ROUGHNESS;
+	float DISPLACEMENT; // starting displacement multiplier
+	bool RANDOM_SEEDS; // random init. values
 
 	// default parameters' values
 	DS_Params()
 	{
-		//OCTAVES = 3;
-		//FREQ = 64;
-		//DISPLACEMENT = 20;
+		ROUGHNESS = 0.8;
+		DISPLACEMENT = 200;
+		RANDOM_SEEDS = false;
 	}
 };
 

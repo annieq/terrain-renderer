@@ -19,7 +19,7 @@ bool DiamondSquare::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVe
 	float colStep = 2.0f * (float)TERR_HEIGHT/(float)cols;
 
 	DS_Params params;
-	//params.ITERATIONS = 10;
+	params.DISPLACEMENT = 150;
 	vector<vector<float>> heights = formTerrain(rows, cols, params);
 	for (int j = 0; j < cols; ++j)
 	{
@@ -43,14 +43,82 @@ bool DiamondSquare::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVe
 
 vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols, DS_Params params)
 {
-	// todo
+	int areaSize = 1;
 	vector<vector<float>> heights;
+	float disp = params.DISPLACEMENT;
+	int halfSide;
+
+	// area must be a square with side 2^n - 1
+	while ( (areaSize + 1) < rows || (areaSize + 1) < cols)
+		areaSize *= 2;
+	areaSize += 1;
+	
+	// make place for values
+	heights.resize(areaSize);
+	for (int i=0; i<areaSize; ++i)
+		heights[i].resize(areaSize);
+
+	srand(time(NULL));
+
+	// initial values
+	if (params.RANDOM_SEEDS)
+	{
+		heights[0		  ][0		  ] = rand() % (int)disp;
+		heights[areaSize-1][0		  ] = rand() % (int)disp;
+		heights[0		  ][areaSize-1] = rand() % (int)disp;
+		heights[areaSize-1][areaSize-1] = rand() % (int)disp;
+	}
+	else
+		heights[0][0] = heights[0][areaSize-1] 
+					  = heights[areaSize-1][0] = heights[areaSize-1][areaSize-1] 
+					  = 0.0;
+
+	for (int side = areaSize-1; side >= 2; side /= 2)
+	{
+		halfSide = side/2;
+
+		// square step
+		for (int x = 0; x < areaSize-1; x += side)
+		{
+			for (int y = 0; y < areaSize-1; y += side)
+			{
+				float avg = heights[x][y]
+						  + heights[x+side][y]
+						  + heights[x][y+side]
+						  + heights[x+side][y+side];
+				avg /= 4.0;
+				float random = rand() % (int)ceil(2*disp) - disp;	// from (-disp; disp)
+
+				heights[x+halfSide][y+halfSide] = avg + random;
+			}
+		}
+
+		// diamond step
+		for (int x = 0; x < areaSize-1; x += halfSide)
+		{
+			for (int y = (x+halfSide)%side; y < areaSize-1; y += side)
+			{
+				float avg = heights[(x-halfSide + areaSize)%areaSize][y]
+						  + heights[(x+halfSide)		   %areaSize][y]
+						  + heights[x][(y+halfSide)			  %areaSize]
+						  + heights[x][(y-halfSide + areaSize)%areaSize];
+				avg /= 4.0;
+				float random = rand() % (int)ceil(2*disp) - disp;	// from (-disp; disp)
+
+				heights[x][y] = avg + random;
+				
+				if (x == 0) heights[areaSize-1][y] = avg;
+				if (y == 0) heights[x][areaSize-1] = avg;
+			}
+		}
+
+		disp /= 2.0;
+	}
+
+	// trim array
 	heights.resize(cols);
 	for (int i=0; i<cols; ++i)
 		heights[i].resize(rows);
-	// initialize with 0
-	for (int i=0; i<cols; ++i)
-		for (int j=0; j<rows; ++j)
-			heights[i][j] = 0.0;
+
 	return heights;
 }
