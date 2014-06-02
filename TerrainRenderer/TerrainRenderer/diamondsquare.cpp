@@ -19,8 +19,8 @@ bool DiamondSquare::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVe
 	float colStep = 2.0f * (float)TERR_HEIGHT/(float)cols;
 
 	DS_Params params;
-	params.DISPLACEMENT = 150;
-	params.ROUGHNESS = 0.5;
+	params.DISPLACEMENT = 512;
+	params.ROUGHNESS = 0.8;
 	vector<vector<float>> heights = formTerrain(rows, cols, params);
 	for (int j = 0; j < cols; ++j)
 	{
@@ -95,15 +95,48 @@ vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols, DS_Params p
 		}
 
 		// diamond step
+		// x,y is a center of a diamond
 		for (int x = 0; x < areaSize-1; x += halfSide)
 		{
 			for (int y = (x+halfSide)%side; y < areaSize-1; y += side)
 			{
-				float avg = heights[(x-halfSide + areaSize)%areaSize][y]
+				float avg;
+				if (x == 0)
+				{
+					avg = heights[(x+halfSide)%areaSize][y]
+						  + heights[x][(y+halfSide)			  %areaSize]
+						  + heights[x][(y-halfSide + areaSize)%areaSize];
+					avg /= 3.0;
+				}
+				else if (x == areaSize-1 - halfSide)
+				{
+					avg = heights[(x-halfSide + areaSize)	   %areaSize][y]
+							  + heights[x][(y+halfSide)			  %areaSize]
+							  + heights[x][(y-halfSide + areaSize)%areaSize];
+					avg /= 3.0;
+				}
+				else if (y == 0)
+				{
+					avg = heights[(x-halfSide + areaSize)	   %areaSize][y]
+							  + heights[(x+halfSide)		   %areaSize][y]
+							  + heights[x][(y+halfSide)			  %areaSize];
+					avg /= 3.0;
+				}
+				else if (y == areaSize-1 - side)
+				{
+					avg = heights[(x-halfSide + areaSize)	   %areaSize][y]
+							  + heights[(x+halfSide)		   %areaSize][y]
+							  + heights[x][(y-halfSide + areaSize)%areaSize];
+					avg /= 3.0;
+				}
+				else
+				{
+					avg = heights[(x-halfSide + areaSize)	   %areaSize][y]
 						  + heights[(x+halfSide)		   %areaSize][y]
 						  + heights[x][(y+halfSide)			  %areaSize]
 						  + heights[x][(y-halfSide + areaSize)%areaSize];
-				avg /= 4.0;
+					avg /= 4.0;
+				}
 				float random = rand() % (int)ceil(2*disp) - disp;	// from (-disp; disp)
 
 				heights[x][y] = avg + random * params.ROUGHNESS;
