@@ -20,6 +20,7 @@ bool DiamondSquare::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVe
 
 	DS_Params params;
 	params.DISPLACEMENT = 150;
+	params.ROUGHNESS = 0.5;
 	vector<vector<float>> heights = formTerrain(rows, cols, params);
 	for (int j = 0; j < cols; ++j)
 	{
@@ -89,7 +90,7 @@ vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols, DS_Params p
 				avg /= 4.0;
 				float random = rand() % (int)ceil(2*disp) - disp;	// from (-disp; disp)
 
-				heights[x+halfSide][y+halfSide] = avg + random;
+				heights[x+halfSide][y+halfSide] = avg + random * params.ROUGHNESS;
 			}
 		}
 
@@ -105,7 +106,7 @@ vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols, DS_Params p
 				avg /= 4.0;
 				float random = rand() % (int)ceil(2*disp) - disp;	// from (-disp; disp)
 
-				heights[x][y] = avg + random;
+				heights[x][y] = avg + random * params.ROUGHNESS;
 				
 				if (x == 0) heights[areaSize-1][y] = avg;
 				if (y == 0) heights[x][areaSize-1] = avg;
