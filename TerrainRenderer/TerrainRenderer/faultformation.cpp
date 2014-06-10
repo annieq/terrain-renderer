@@ -18,9 +18,7 @@ bool FaultForm::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertic
 	float rowStep = 2.0f * (float)TERR_WIDTH/(float)rows;
 	float colStep = 2.0f * (float)TERR_HEIGHT/(float)cols;
 
-	FF_Params params;
-	//params.ITERATIONS = 10;
-	vector<vector<float>> heights = formTerrain(rows, cols, params);
+	vector<vector<float>> heights = formTerrain(rows, cols, m_params);
 	for (int j = 0; j < cols; ++j)
 	{
 		for (int i = 0; i < rows; ++i)
@@ -104,4 +102,11 @@ vector<vector<float>> FaultForm::formTerrain(int rows, int cols, FF_Params par)
 		}
 
 	return heights;
+}
+
+void FaultForm::setParameters(FF_Params par)
+{
+	m_params.ITERATIONS = par.ITERATIONS;
+	m_params.DISPLACEMENT = par.DISPLACEMENT;
+	m_params.WAVE = par.WAVE;
 }

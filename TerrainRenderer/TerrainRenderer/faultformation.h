@@ -7,19 +7,6 @@
 
 using std::vector;
 
-struct FF_Params;
-
-class FaultForm : public Terrain
-{
-public:
-	FaultForm(ID3D11Device *dev);
-	FaultForm(ID3D11Device *dev, int rows, int cols);
-	bool createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices);
-
-private:
-	vector<vector<float>> formTerrain(int rows, int cols, FF_Params params);
-};
-
 struct FF_Params
 {
 	int ITERATIONS;		// number of iterations
@@ -34,5 +21,20 @@ struct FF_Params
 		WAVE = 750;
 	}
 };
+
+class FaultForm : public Terrain
+{
+public:
+	FaultForm(ID3D11Device *dev);
+	FaultForm(ID3D11Device *dev, int rows, int cols);
+	bool createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices);
+	void setParameters(FF_Params par);
+
+private:
+	vector<vector<float>> formTerrain(int rows, int cols, FF_Params params);
+
+	FF_Params m_params;
+};
+
 
 #endif

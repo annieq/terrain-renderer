@@ -9,22 +9,6 @@
 
 using std::vector;
 
-struct IMP_Params;
-
-class ImprovedPerlinNoise : public Terrain
-{
-public:
-	ImprovedPerlinNoise(ID3D11Device *dev);
-	ImprovedPerlinNoise(ID3D11Device *dev, int rows, int cols);
-	bool createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices);
-
-private:
-	vector<vector<float>> formTerrain(int rows, int cols, IMP_Params params);
-	float grad( int hash, float x, float y );
-	float noise( float x, float y );
-
-};
-
 struct IMP_Params
 {
 	int OCTAVES;		// number of octaves
@@ -39,5 +23,23 @@ struct IMP_Params
 		DISPLACEMENT = 20;
 	}
 };
+
+class ImprovedPerlinNoise : public Terrain
+{
+public:
+	ImprovedPerlinNoise(ID3D11Device *dev);
+	ImprovedPerlinNoise(ID3D11Device *dev, int rows, int cols);
+	bool createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices);
+	void setParameters(IMP_Params par);
+
+private:
+	vector<vector<float>> formTerrain(int rows, int cols, IMP_Params params);
+	float grad( int hash, float x, float y );
+	float noise( float x, float y );
+
+	IMP_Params m_params;
+
+};
+
 
 #endif

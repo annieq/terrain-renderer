@@ -5,8 +5,6 @@
 
 using std::vector;
 
-template <typename T> std::string tostr(const T& t) { std::ostringstream os; os<<t; return os.str(); }
-
 struct DS_Params
 {
 	float ROUGHNESS;	// roughness
@@ -16,7 +14,7 @@ struct DS_Params
 	// default parameters' values
 	DS_Params()
 	{
-		ROUGHNESS = 0.8;
+		ROUGHNESS = 0.8f;
 		DISPLACEMENT = 200;
 		RANDOM_SEEDS = false;
 	}

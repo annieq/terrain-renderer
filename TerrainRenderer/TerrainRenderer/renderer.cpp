@@ -565,9 +565,47 @@ bool Renderer::doExperiment()
 		file >> str;
 		if (str == "PN")	// Perlin noise
 		{
+			IMP_Params par;
+			file >> par.OCTAVES;
+			file >> par.FREQ;
+			file >> par.DISPLACEMENT;
+			// do single experiment
+			ImprovedPerlinNoise* ipn_terr = new ImprovedPerlinNoise(m_device);
+			ipn_terr->setParameters(par);
+			m_terr->release();
+			m_terr = ipn_terr;
+			if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
+				return false;
+			if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
+				return false;
+
+			// save results
+			m_terr->saveToFile(str	+ "_" 
+									+ tostr(par.OCTAVES) + "_"
+									+ tostr(par.FREQ) + "_"
+									+ tostr(par.DISPLACEMENT) + ".bmp");
 		}
 		else if (str == "FF")	// Fault form.
 		{
+			FF_Params par;
+			file >> par.ITERATIONS;
+			file >> par.DISPLACEMENT;
+			file >> par.WAVE;
+			// do single experiment
+			FaultForm* ff_terr = new FaultForm(m_device);
+			ff_terr->setParameters(par);
+			m_terr->release();
+			m_terr = ff_terr;
+			if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
+				return false;
+			if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
+				return false;
+
+			// save results
+			m_terr->saveToFile(str	+ "_" 
+									+ tostr(par.ITERATIONS) + "_"
+									+ tostr(par.DISPLACEMENT) + "_"
+									+ tostr(par.WAVE) + ".bmp");
 		}
 		else if (str == "DS")	// Diamond-Square
 		{
@@ -599,10 +637,10 @@ bool Renderer::doExperiment()
 		else
 			return false;
 
-		//// uncomment to see results :)
-		//D3DXVECTOR3 v = D3DXVECTOR3(0.0, 0.0, 0.0);
-		//renderFrame(v, v, false, false);
-		//Sleep(200);
+		// uncomment to see results :)
+		D3DXVECTOR3 v = D3DXVECTOR3(0.0, 0.0, 0.0);
+		renderFrame(v, v, false, false);
+		Sleep(300);
 	}
 	file.close();
 	return true;

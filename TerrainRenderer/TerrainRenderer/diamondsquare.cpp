@@ -18,9 +18,6 @@ bool DiamondSquare::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVe
 	float rowStep = 2.0f * (float)TERR_WIDTH/(float)rows;
 	float colStep = 2.0f * (float)TERR_HEIGHT/(float)cols;
 
-	//DS_Params params;
-	//params.DISPLACEMENT = 512;
-	//params.ROUGHNESS = 0.8;
 	vector<vector<float>> heights = formTerrain(rows, cols);
 	for (int j = 0; j < cols; ++j)
 	{
