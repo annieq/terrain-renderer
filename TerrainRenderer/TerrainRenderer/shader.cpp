@@ -12,9 +12,12 @@ void Shader::init(ID3D11Device *dev, ID3D11DeviceContext *devContext, std::vecto
 	m_deviceContext = devContext;
 
 	ID3D10Blob *vsBlob, *psBlob, *gsBlob;
-	D3DX11CompileFromFile(L"../TerrainRenderer/base.vs", NULL, NULL, "VShader", "vs_5_0", NULL, NULL, NULL, &vsBlob, NULL, NULL);
-	D3DX11CompileFromFile(L"../TerrainRenderer/base.gs", NULL, NULL, "GShader", "gs_5_0", NULL, NULL, NULL, &gsBlob, NULL, NULL);
-	D3DX11CompileFromFile(L"../TerrainRenderer/base.ps", NULL, NULL, "PShader", "ps_5_0", NULL, NULL, NULL, &psBlob, NULL, NULL);
+	//D3DX11CompileFromFile(L"../TerrainRenderer/base.vs", NULL, NULL, "VShader", "vs_5_0", NULL, NULL, NULL, &vsBlob, NULL, NULL);
+	//D3DX11CompileFromFile(L"../TerrainRenderer/base.gs", NULL, NULL, "GShader", "gs_5_0", NULL, NULL, NULL, &gsBlob, NULL, NULL);
+	//D3DX11CompileFromFile(L"../TerrainRenderer/base.ps", NULL, NULL, "PShader", "ps_5_0", NULL, NULL, NULL, &psBlob, NULL, NULL);
+	D3DX11CompileFromFile(L"base.vs", NULL, NULL, "VShader", "vs_5_0", NULL, NULL, NULL, &vsBlob, NULL, NULL);
+	D3DX11CompileFromFile(L"base.gs", NULL, NULL, "GShader", "gs_5_0", NULL, NULL, NULL, &gsBlob, NULL, NULL);
+	D3DX11CompileFromFile(L"base.ps", NULL, NULL, "PShader", "ps_5_0", NULL, NULL, NULL, &psBlob, NULL, NULL);
 
 	// vertex shader
 	dev->CreateVertexShader(vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(), NULL, &m_vShader);

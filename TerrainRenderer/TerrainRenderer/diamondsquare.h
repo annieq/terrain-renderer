@@ -21,7 +21,7 @@ private:
 
 struct DS_Params
 {
-	float ROUGHNESS;
+	float ROUGHNESS;	// roughness
 	float DISPLACEMENT; // starting displacement multiplier
 	bool RANDOM_SEEDS; // random init. values
 

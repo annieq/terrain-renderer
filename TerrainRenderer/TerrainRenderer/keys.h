@@ -39,8 +39,6 @@ public:
 	~Keys();
 
 	void Initialize();
-	void Shutdown();
-	bool Frame();
 
 	void KeyPressed(unsigned int key);
 	void KeyReleased(unsigned int key);

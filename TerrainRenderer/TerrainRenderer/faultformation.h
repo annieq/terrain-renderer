@@ -22,9 +22,9 @@ private:
 
 struct FF_Params
 {
-	int ITERATIONS;
-	float DISPLACEMENT;
-	float WAVE;
+	int ITERATIONS;		// number of iterations
+	float DISPLACEMENT;	// initial displacement
+	float WAVE;			// wave length
 
 	// default parameters' values
 	FF_Params()

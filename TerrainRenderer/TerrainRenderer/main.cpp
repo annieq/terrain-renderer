@@ -1,4 +1,5 @@
 #include "window.h"
+#include <Windows.h>
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -8,7 +9,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		w.run();
 	else
 	{
-		// message box
+		MessageBox(NULL, L"Wyst¹pi³ b³¹d.", L"B³¹d", MB_OK);
 	}
 
 	w.shutdown();
