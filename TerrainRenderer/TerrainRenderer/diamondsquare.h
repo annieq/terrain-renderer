@@ -5,19 +5,7 @@
 
 using std::vector;
 
-struct DS_Params;
-
-class DiamondSquare : public Terrain
-{
-public:
-	DiamondSquare(ID3D11Device *dev);
-	DiamondSquare(ID3D11Device *dev, int rows, int cols);
-	bool createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices);
-
-private:
-	vector<vector<float>> formTerrain(int rows, int cols, DS_Params params);
-
-};
+template <typename T> std::string tostr(const T& t) { std::ostringstream os; os<<t; return os.str(); }
 
 struct DS_Params
 {
@@ -33,5 +21,21 @@ struct DS_Params
 		RANDOM_SEEDS = false;
 	}
 };
+
+class DiamondSquare : public Terrain
+{
+public:
+	DiamondSquare(ID3D11Device *dev);
+	DiamondSquare(ID3D11Device *dev, int rows, int cols);
+	bool createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVertices);
+	void setParameters(DS_Params par);
+
+private:
+	vector<vector<float>> formTerrain(int rows, int cols);
+
+	DS_Params m_params;
+
+};
+
 
 #endif

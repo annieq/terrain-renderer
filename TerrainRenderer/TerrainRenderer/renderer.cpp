@@ -446,8 +446,8 @@ void Renderer::renderFrame(D3DXVECTOR3 move, D3DXVECTOR3 rotate, bool lmbState, 
 		<< ";\tROT: x = " << crot.x << " y = " << crot.y << " z = " << crot.z << std:: endl;
 	oss << "F1 - wireframe\tF2 - save\t\tF3 - load\t\tF4 - reset" << std::endl;
 	oss << "F5 - base terrain\tF6 - Fault Formation\t\tF7 - Improved Perlin Noise\tF8 - Diamond-Square" << std::endl; 
-	oss << "Selected vertices: ";
-	m_terr->drawSelectedId(oss);
+	oss << "F9 - experiment\t";//Selected vertices: ";
+	//m_terr->drawSelectedId(oss);
 
 	std::wstring text = oss.str();
 	m_FontWrapper->DrawString(
@@ -548,5 +548,62 @@ bool Renderer::loadTerrain(std::string filename)
 		return false;
 	
 	m_terr->refreshVBuffer(&m_vBuffer);
+	return true;
+}
+
+bool Renderer::doExperiment()
+{
+	std::ifstream file;
+	std::string str, str2;
+	file.open("test.config");
+	if (!file.is_open())
+		return false;
+	while (file >> str)
+	{
+		if (str != "==")
+			return false;
+		file >> str;
+		if (str == "PN")	// Perlin noise
+		{
+		}
+		else if (str == "FF")	// Fault form.
+		{
+		}
+		else if (str == "DS")	// Diamond-Square
+		{
+			// read parameters
+			DS_Params par;
+			file >> par.ROUGHNESS;
+			file >> par.DISPLACEMENT;
+			file >> str2;
+			if (str2 == "true")
+				par.RANDOM_SEEDS = true;
+			else
+				par.RANDOM_SEEDS = false;
+			// do single experiment
+			DiamondSquare* ds_terr = new DiamondSquare(m_device);
+			ds_terr->setParameters(par);
+			m_terr->release();
+			m_terr = ds_terr;
+			if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
+				return false;
+			if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
+				return false;
+
+			// save results
+			m_terr->saveToFile(str	+ "_" 
+									+ tostr(par.ROUGHNESS) + "_"
+									+ tostr(par.DISPLACEMENT) + "_"
+									+ tostr(par.RANDOM_SEEDS) + ".bmp");
+		}
+		else
+			return false;
+
+		//// uncomment to see results :)
+		//D3DXVECTOR3 v = D3DXVECTOR3(0.0, 0.0, 0.0);
+		//renderFrame(v, v, false, false);
+		//Sleep(200);
+	}
+	file.close();
 	return true;
 }

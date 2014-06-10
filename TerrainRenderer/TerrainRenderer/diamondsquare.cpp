@@ -18,10 +18,10 @@ bool DiamondSquare::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVe
 	float rowStep = 2.0f * (float)TERR_WIDTH/(float)rows;
 	float colStep = 2.0f * (float)TERR_HEIGHT/(float)cols;
 
-	DS_Params params;
-	params.DISPLACEMENT = 512;
-	params.ROUGHNESS = 0.8;
-	vector<vector<float>> heights = formTerrain(rows, cols, params);
+	//DS_Params params;
+	//params.DISPLACEMENT = 512;
+	//params.ROUGHNESS = 0.8;
+	vector<vector<float>> heights = formTerrain(rows, cols);
 	for (int j = 0; j < cols; ++j)
 	{
 		for (int i = 0; i < rows; ++i)
@@ -42,11 +42,11 @@ bool DiamondSquare::createVertices(ID3D11Buffer **vBuffer, unsigned int *numOfVe
 	return true;
 }
 
-vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols, DS_Params params)
+vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols)
 {
 	int areaSize = 1;
 	vector<vector<float>> heights;
-	float disp = params.DISPLACEMENT;
+	float disp = m_params.DISPLACEMENT;
 	int halfSide;
 
 	// area must be a square with side 2^n - 1
@@ -62,12 +62,12 @@ vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols, DS_Params p
 	srand(time(NULL));
 
 	// initial values
-	if (params.RANDOM_SEEDS)
+	if (m_params.RANDOM_SEEDS)
 	{
-		heights[0		  ][0		  ] = rand() % (int)disp;
-		heights[areaSize-1][0		  ] = rand() % (int)disp;
-		heights[0		  ][areaSize-1] = rand() % (int)disp;
-		heights[areaSize-1][areaSize-1] = rand() % (int)disp;
+		heights[0		  ][0		  ] = -disp + rand() % 2*(int)disp;
+		heights[areaSize-1][0		  ] = -disp + rand() % 2*(int)disp;
+		heights[0		  ][areaSize-1] = -disp + rand() % 2*(int)disp;
+		heights[areaSize-1][areaSize-1] = -disp + rand() % 2*(int)disp;
 	}
 	else
 		heights[0][0] = heights[0][areaSize-1] 
@@ -90,7 +90,7 @@ vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols, DS_Params p
 				avg /= 4.0;
 				float random = rand() % (int)ceil(2*disp) - disp;	// from (-disp; disp)
 
-				heights[x+halfSide][y+halfSide] = avg + random * params.ROUGHNESS;
+				heights[x+halfSide][y+halfSide] = avg + random * m_params.ROUGHNESS;
 			}
 		}
 
@@ -139,7 +139,7 @@ vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols, DS_Params p
 				}
 				float random = rand() % (int)ceil(2*disp) - disp;	// from (-disp; disp)
 
-				heights[x][y] = avg + random * params.ROUGHNESS;
+				heights[x][y] = avg + random * m_params.ROUGHNESS;
 				
 				if (x == 0) heights[areaSize-1][y] = avg;
 				if (y == 0) heights[x][areaSize-1] = avg;
@@ -155,4 +155,11 @@ vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols, DS_Params p
 		heights[i].resize(rows);
 
 	return heights;
+}
+
+void DiamondSquare::setParameters(DS_Params par)
+{
+	m_params.DISPLACEMENT = par.DISPLACEMENT;
+	m_params.RANDOM_SEEDS = par.RANDOM_SEEDS;
+	m_params.ROUGHNESS = par.ROUGHNESS;
 }

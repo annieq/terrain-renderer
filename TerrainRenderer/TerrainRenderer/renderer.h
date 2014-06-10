@@ -18,6 +18,7 @@ public:
 	bool initDX(HWND);
 	void renderFrame(D3DXVECTOR3,D3DXVECTOR3,bool,bool);
 	bool changeTerrain(short type);
+	bool doExperiment();
 	void shutdown();
 	void changeWireframe();
 	void moveVertex(float value);

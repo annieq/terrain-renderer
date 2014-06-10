@@ -1,0 +1,21 @@
+==
+DS/FF/PN - okreœlenie algorytmu
+
+dla DS kolejne linie:
+roughness
+displacement
+random seeds
+
+==
+
+dla FF kolejne linie:
+iterations
+displacement
+wave
+
+==
+
+dla PN kolejne linie:
+octaves
+freq
+displacement

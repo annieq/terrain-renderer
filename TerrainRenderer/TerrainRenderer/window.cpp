@@ -168,6 +168,12 @@ void Window::run()
 				m_keys->KeyReleased(F8);
 				m_renderer->changeTerrain(F8);
 				break;
+			case 9:
+				m_keys->KeyReleased(F9);
+				bool ret = m_renderer->doExperiment();
+				if (!ret)
+					MessageBox(NULL, L"Wyst¹pi³ b³¹d. Nie uda³o siê uruchomiæ eksperymentu.", L"B³¹d", MB_OK);
+				break;
 			}
 
 			bool shiftstate = false;

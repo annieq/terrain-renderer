@@ -85,6 +85,8 @@ int Keys::checkF()
 		return 7;
 	if (m_keyboardState[F8])
 		return 8;
+	if (m_keyboardState[F9])
+		return 9;
 
 	return -1;
 }
