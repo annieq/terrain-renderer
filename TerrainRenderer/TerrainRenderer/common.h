@@ -42,6 +42,7 @@
 // math :P
 #define PI 3.14159265358979323846
 
+// converting values to string
 template <typename T> std::string tostr(const T& t) { std::ostringstream os; os<<t; return os.str(); }
 
 #endif

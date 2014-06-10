@@ -100,8 +100,5 @@
     <None Include="base.vs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="perlin.vs">
-      <Filter>Shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>

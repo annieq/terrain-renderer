@@ -41,7 +41,6 @@
     <None Include="base.gs" />
     <None Include="base.ps" />
     <None Include="base.vs" />
-    <None Include="perlin.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8A6080EB-C4F9-4763-AD01-B5BD3387E5C7}</ProjectGuid>

@@ -161,12 +161,6 @@ bool Renderer::createCBuffers()
 	   251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,
 	   49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
 	   138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180 };
-	//D3DXVECTOR3 grad[16] = {
-	//	D3DXVECTOR3(1,1,0),    D3DXVECTOR3(-1,1,0),    D3DXVECTOR3(1,-1,0),    D3DXVECTOR3(-1,-1,0),
-	//	D3DXVECTOR3(1,0,1),    D3DXVECTOR3(-1,0,1),    D3DXVECTOR3(1,0,-1),    D3DXVECTOR3(-1,0,-1),
-	//	D3DXVECTOR3(0,1,1),    D3DXVECTOR3(0,-1,1),    D3DXVECTOR3(0,1,-1),    D3DXVECTOR3(0,-1,-1),
-	//	D3DXVECTOR3(1,1,0),    D3DXVECTOR3(0,-1,1),    D3DXVECTOR3(-1,1,0),    D3DXVECTOR3(0,-1,-1)
-	//};
 	D3DXVECTOR2 grad[8] = {
 		D3DXVECTOR2(1, 2),	D3DXVECTOR2(-1, 2),	D3DXVECTOR2(1, -2),	D3DXVECTOR2(-1, -2),
 		D3DXVECTOR2(2, 1),	D3DXVECTOR2(2, -1),	D3DXVECTOR2(-2, 1),	D3DXVECTOR2(-2, -1)
@@ -222,7 +216,6 @@ bool Renderer::changeTerrain(short type)
 {
 	if (type == F5)
 	{
-		m_shader.updateShader(VSHADER, L"base.vs");
 		m_terr->release();
 		m_terr = new Terrain(m_device);
 		if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
@@ -232,7 +225,6 @@ bool Renderer::changeTerrain(short type)
 	}
 	else if (type == F6)
 	{
-		m_shader.updateShader(VSHADER, L"base.vs");
 		m_terr->release();
 		m_terr = new FaultForm(m_device);
 		if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
@@ -242,15 +234,6 @@ bool Renderer::changeTerrain(short type)
 	}
 	else if (type == F7)
 	{
-		//m_shader.updateShader(VSHADER, L"../TerrainRenderer/perlin.vs");
-		////m_shader.updateShader(PSHADER, L"../TerrainRenderer/perlin.ps");
-		//m_terr->release();
-		//m_terr = new Terrain(m_device);
-		//if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
-		//	return false;
-		//if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
-		//	return false;
-		m_shader.updateShader(VSHADER, L"base.vs");
 		m_terr->release();
 		m_terr = new ImprovedPerlinNoise(m_device);
 		if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
@@ -260,7 +243,6 @@ bool Renderer::changeTerrain(short type)
 	}
 	else if (type == F8)
 	{
-		m_shader.updateShader(VSHADER, L"base.vs");
 		m_terr->release();
 		m_terr = new DiamondSquare(m_device);
 		if (!m_terr->createVertices(&m_vBuffer, &m_numberOfVertices))
@@ -534,6 +516,8 @@ bool Renderer::loadTerrain(std::string filename)
 {
 	if (!m_terr)
 		return false;
+	m_terr->release();
+	m_terr = new Terrain(m_device);
 	if (filename.length() > 0)
 	{
 		if (!m_terr->loadFromFile(filename))
@@ -580,7 +564,8 @@ bool Renderer::doExperiment()
 				return false;
 
 			// save results
-			m_terr->saveToFile(str	+ "_" 
+			CreateDirectory(L"test", NULL);
+			m_terr->saveToFile("test\\" + str	+ "_" 
 									+ tostr(par.OCTAVES) + "_"
 									+ tostr(par.FREQ) + "_"
 									+ tostr(par.DISPLACEMENT) + ".bmp");
@@ -602,7 +587,8 @@ bool Renderer::doExperiment()
 				return false;
 
 			// save results
-			m_terr->saveToFile(str	+ "_" 
+			CreateDirectory(L"test", NULL);
+			m_terr->saveToFile("test\\" + str	+ "_" 
 									+ tostr(par.ITERATIONS) + "_"
 									+ tostr(par.DISPLACEMENT) + "_"
 									+ tostr(par.WAVE) + ".bmp");
@@ -629,7 +615,8 @@ bool Renderer::doExperiment()
 				return false;
 
 			// save results
-			m_terr->saveToFile(str	+ "_" 
+			CreateDirectory(L"test", NULL);
+			m_terr->saveToFile("test\\" + str	+ "_" 
 									+ tostr(par.ROUGHNESS) + "_"
 									+ tostr(par.DISPLACEMENT) + "_"
 									+ tostr(par.RANDOM_SEEDS) + ".bmp");

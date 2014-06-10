@@ -31,7 +31,7 @@ public:
 	void setParameters(FF_Params par);
 
 private:
-	vector<vector<float>> formTerrain(int rows, int cols, FF_Params params);
+	vector<vector<float>> formTerrain(int rows, int cols);
 
 	FF_Params m_params;
 };

@@ -33,7 +33,7 @@ public:
 	void setParameters(IMP_Params par);
 
 private:
-	vector<vector<float>> formTerrain(int rows, int cols, IMP_Params params);
+	vector<vector<float>> formTerrain(int rows, int cols);
 	float grad( int hash, float x, float y );
 	float noise( float x, float y );
 
