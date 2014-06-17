@@ -45,10 +45,14 @@ vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols)
 	vector<vector<float>> heights;
 	float disp = m_params.DISPLACEMENT;
 	int halfSide;
+	int iterations = 0;
 
 	// area must be a square with side 2^n - 1
 	while ( (areaSize + 1) < rows || (areaSize + 1) < cols)
+	{
 		areaSize *= 2;
+		++iterations;
+	}
 	areaSize += 1;
 	
 	// make place for values
@@ -74,6 +78,8 @@ vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols)
 	for (int side = areaSize-1; side >= 2; side /= 2)
 	{
 		halfSide = side/2;
+		if (side <= pow(2.0, iterations/3))
+			m_params.ROUGHNESS = 0; // for last 1/3 iterations do steps without randomness
 
 		// square step
 		for (int x = 0; x < areaSize-1; x += side)
@@ -93,9 +99,9 @@ vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols)
 
 		// diamond step
 		// x,y is a center of a diamond
-		for (int x = 0; x < areaSize-1; x += halfSide)
+		for (int x = 0; x < areaSize; x += halfSide)
 		{
-			for (int y = (x+halfSide)%side; y < areaSize-1; y += side)
+			for (int y = (x+halfSide)%side; y < areaSize; y += side)
 			{
 				float avg;
 				if (x == 0)
@@ -105,7 +111,7 @@ vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols)
 						  + heights[x][(y-halfSide + areaSize)%areaSize];
 					avg /= 3.0;
 				}
-				else if (x == areaSize-1 - halfSide)
+				else if (x == areaSize-1)
 				{
 					avg = heights[(x-halfSide + areaSize)	   %areaSize][y]
 							  + heights[x][(y+halfSide)			  %areaSize]
@@ -119,7 +125,7 @@ vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols)
 							  + heights[x][(y+halfSide)			  %areaSize];
 					avg /= 3.0;
 				}
-				else if (y == areaSize-1 - side)
+				else if (y == areaSize-1)
 				{
 					avg = heights[(x-halfSide + areaSize)	   %areaSize][y]
 							  + heights[(x+halfSide)		   %areaSize][y]
@@ -138,18 +144,53 @@ vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols)
 
 				heights[x][y] = avg + random * m_params.ROUGHNESS;
 				
-				if (x == 0) heights[areaSize-1][y] = avg;
-				if (y == 0) heights[x][areaSize-1] = avg;
+				//if (x == 0) heights[areaSize-1][y] = avg;
+				//if (y == 0) heights[x][areaSize-1] = avg;
 			}
 		}
 
 		disp /= 2.0;
 	}
 
+	// smoothing
+	int side = pow(2.0, iterations/3);
+	float avg;
+	for (int x = side; x < areaSize - side; x += side)
+		for (int y = side; y < areaSize - side; y += side)
+		{
+			avg = heights[x-1][y-1]
+				+ heights[x-1][y  ]
+				+ heights[x-1][y+1]
+				+ heights[x  ][y-1]
+				+ heights[x  ][y+1]
+				+ heights[x+1][y-1]
+				+ heights[x+1][y  ]
+				+ heights[x+1][y+1];
+			avg /= 8.0;
+			heights[x][y] = avg;
+		}
+	// array border
+
 	// trim array
 	heights.resize(cols);
 	for (int i=0; i<cols; ++i)
 		heights[i].resize(rows);
+
+	// rescale heights
+	float min = -128, max = 127;
+	for (int i=0; i<cols; ++i)
+		for (int j=0; j<rows; ++j)
+		{
+			if (heights[i][j] < min)
+				min = heights[i][j];
+			else if (heights[i][j] > max)
+				max = heights[i][j];
+		}
+	for (int i=0; i<cols; ++i)
+		for (int j=0; j<rows; ++j)
+		{
+			heights[i][j] = 255.0/(max-min) * (heights[i][j] - min) - 128.0;
+		}
 
 	return heights;
 }

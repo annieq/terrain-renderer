@@ -537,6 +537,7 @@ bool Renderer::loadTerrain(std::string filename)
 
 bool Renderer::doExperiment()
 {
+	int counter = 0;
 	std::ifstream file;
 	std::string str, str2;
 	file.open("test.config");
@@ -544,6 +545,7 @@ bool Renderer::doExperiment()
 		return false;
 	while (file >> str)
 	{
+		++counter;
 		if (str != "==")
 			return false;
 		file >> str;
@@ -565,7 +567,7 @@ bool Renderer::doExperiment()
 
 			// save results
 			CreateDirectory(L"test", NULL);
-			m_terr->saveToFile("test\\" + str	+ "_" 
+			m_terr->saveToFile("test\\" + tostr(counter) + " " + str + "_" 
 									+ tostr(par.OCTAVES) + "_"
 									+ tostr(par.FREQ) + "_"
 									+ tostr(par.DISPLACEMENT) + ".bmp");
@@ -588,7 +590,7 @@ bool Renderer::doExperiment()
 
 			// save results
 			CreateDirectory(L"test", NULL);
-			m_terr->saveToFile("test\\" + str	+ "_" 
+			m_terr->saveToFile("test\\" + tostr(counter) + " " + str	+ "_" 
 									+ tostr(par.ITERATIONS) + "_"
 									+ tostr(par.DISPLACEMENT) + "_"
 									+ tostr(par.WAVE) + ".bmp");
@@ -616,7 +618,7 @@ bool Renderer::doExperiment()
 
 			// save results
 			CreateDirectory(L"test", NULL);
-			m_terr->saveToFile("test\\" + str	+ "_" 
+			m_terr->saveToFile("test\\" + tostr(counter) + " " + str	+ "_" 
 									+ tostr(par.ROUGHNESS) + "_"
 									+ tostr(par.DISPLACEMENT) + "_"
 									+ tostr(par.RANDOM_SEEDS) + ".bmp");

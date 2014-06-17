@@ -171,8 +171,12 @@ void Window::run()
 			case 9:
 				m_keys->KeyReleased(F9);
 				bool ret = m_renderer->doExperiment();
-				if (!ret)
-					MessageBox(NULL, L"Wyst¹pi³ b³¹d. Nie uda³o siê uruchomiæ eksperymentu.", L"B³¹d", MB_OK);
+				if (ret)
+					MessageBox(NULL, L"Eksperyment zakoñczony sukcesem!", L"Informacja",
+								MB_OK | MB_ICONASTERISK);
+				else
+					MessageBox(NULL, L"Wyst¹pi³ b³¹d. Nie uda³o siê uruchomiæ eksperymentu.", L"B³¹d",
+								MB_OK | MB_ICONERROR);
 				break;
 			}
 

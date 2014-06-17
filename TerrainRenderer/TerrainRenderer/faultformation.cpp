@@ -86,7 +86,7 @@ vector<vector<float>> FaultForm::formTerrain(int rows, int cols)
 		disp -= step;
 	}
 	// rescale heights
-	float min = heights[0][0], max = heights[0][0];
+	float min = -127, max = 128;
 	for (int i=0; i<cols; ++i)
 		for (int j=0; j<rows; ++j)
 		{
