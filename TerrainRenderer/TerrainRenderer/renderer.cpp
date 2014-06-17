@@ -497,11 +497,18 @@ bool Renderer::loadTerrain(std::string filename)
 bool Renderer::doExperiment()
 {
 	int counter = 0;
+	clock_t t;
 	std::ifstream file;
+	std::ofstream file2;
 	std::string str, str2;
+
 	file.open("test.config");
 	if (!file.is_open())
 		return false;
+	file2.open("test.log");
+	if (!file2.is_open())
+		return false;
+
 	while (file >> str)
 	{
 		++counter;
@@ -515,6 +522,7 @@ bool Renderer::doExperiment()
 			file >> par.FREQ;
 			file >> par.DISPLACEMENT;
 			// do single experiment
+						t = clock();
 			ImprovedPerlinNoise* ipn_terr = new ImprovedPerlinNoise(m_device);
 			ipn_terr->setParameters(par);
 			m_terr->release();
@@ -523,6 +531,7 @@ bool Renderer::doExperiment()
 				return false;
 			if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
 				return false;
+						t = clock() - t;
 
 			// save results
 			CreateDirectory(L"test", NULL);
@@ -530,6 +539,7 @@ bool Renderer::doExperiment()
 									+ tostr(par.OCTAVES) + "_"
 									+ tostr(par.FREQ) + "_"
 									+ tostr(par.DISPLACEMENT) + ".bmp");
+			file2 << counter << ".\t" << t << std::endl;
 		}
 		else if (str == "FF")	// Fault form.
 		{
@@ -538,6 +548,7 @@ bool Renderer::doExperiment()
 			file >> par.DISPLACEMENT;
 			file >> par.WAVE;
 			// do single experiment
+						t = clock();
 			FaultForm* ff_terr = new FaultForm(m_device);
 			ff_terr->setParameters(par);
 			m_terr->release();
@@ -546,6 +557,7 @@ bool Renderer::doExperiment()
 				return false;
 			if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
 				return false;
+						t = clock() - t;
 
 			// save results
 			CreateDirectory(L"test", NULL);
@@ -553,6 +565,7 @@ bool Renderer::doExperiment()
 									+ tostr(par.ITERATIONS) + "_"
 									+ tostr(par.DISPLACEMENT) + "_"
 									+ tostr(par.WAVE) + ".bmp");
+			file2 << counter << ".\t" << t << std::endl;
 		}
 		else if (str == "DS")	// Diamond-Square
 		{
@@ -566,6 +579,7 @@ bool Renderer::doExperiment()
 			else
 				par.RANDOM_SEEDS = false;
 			// do single experiment
+						t = clock();
 			DiamondSquare* ds_terr = new DiamondSquare(m_device);
 			ds_terr->setParameters(par);
 			m_terr->release();
@@ -574,6 +588,7 @@ bool Renderer::doExperiment()
 				return false;
 			if (!m_terr->createIndices(&m_iBuffer, &m_numberOfIndices))
 				return false;
+						t = clock() - t;
 
 			// save results
 			CreateDirectory(L"test", NULL);
@@ -581,6 +596,7 @@ bool Renderer::doExperiment()
 									+ tostr(par.ROUGHNESS) + "_"
 									+ tostr(par.DISPLACEMENT) + "_"
 									+ tostr(par.RANDOM_SEEDS) + ".bmp");
+			file2 << counter << ".\t" << t << std::endl;
 		}
 		else
 			return false;
@@ -591,5 +607,6 @@ bool Renderer::doExperiment()
 		Sleep(300);
 	}
 	file.close();
+	file2.close();
 	return true;
 }
