@@ -150,7 +150,7 @@ void Window::run()
 				break;
 			case 4:
 				m_keys->KeyReleased(F4);
-				m_renderer->loadTerrain();
+				m_renderer->changeTerrain(F4);
 				break;
 			case 5:
 				m_keys->KeyReleased(F5);
@@ -166,10 +166,6 @@ void Window::run()
 				break;
 			case 8:
 				m_keys->KeyReleased(F8);
-				m_renderer->changeTerrain(F8);
-				break;
-			case 9:
-				m_keys->KeyReleased(F9);
 				bool ret = m_renderer->doExperiment();
 				if (ret)
 					MessageBox(NULL, L"Eksperyment zakoñczony sukcesem!", L"Informacja",
