@@ -1,6 +1,7 @@
 #ifndef PERLIN_H
 #define PERLIN_H
 
+#include <algorithm>
 #include "terrain.h"
 
 #define FADE(t) ( t * t * t * ( t * ( t * 6 - 15 ) + 10 ) )
@@ -37,6 +38,7 @@ private:
 	float grad( int hash, float x, float y );
 	float noise( float x, float y );
 
+	unsigned char m_perm[512];
 	IMP_Params m_params;
 
 };

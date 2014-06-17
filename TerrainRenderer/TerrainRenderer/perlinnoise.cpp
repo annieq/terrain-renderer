@@ -47,6 +47,14 @@ vector<vector<float>> ImprovedPerlinNoise::formTerrain(int rows, int cols)
 	heights.resize(cols);
 	for (int i=0; i<cols; ++i)
 		heights[i].resize(rows);
+	
+	// initialize permutation table
+	for (int i=0; i<256; ++i)
+		m_perm[i] = i;
+	std::random_shuffle(&m_perm[0], &m_perm[256]);
+	for (int i=256; i<512; ++i)
+		m_perm[i] = m_perm[i-256];
+
 	// calculate noise for every vertex
 	for (int i=0; i<cols; ++i)
 		for (int j=0; j<rows; ++j)
@@ -73,7 +81,7 @@ float  ImprovedPerlinNoise::grad( int hash, float x, float y ) {
 
 float ImprovedPerlinNoise::noise( float x, float y )
 {
-	unsigned char perm[] = {151,160,137,91,90,15,
+	/*unsigned char perm[] = {151,160,137,91,90,15,
 		131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
 		190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,
 		88,237,149,56,87,174,20,125,136,171,168, 68,175,74,165,71,134,139,48,27,166,
@@ -99,8 +107,7 @@ float ImprovedPerlinNoise::noise( float x, float y )
 		251,34,242,193,238,210,144,12,191,179,162,241, 81,51,145,235,249,14,239,107,
 		49,192,214, 31,181,199,106,157,184, 84,204,176,115,121,50,45,127, 4,150,254,
 		138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180
-	};
-
+	};*/
     int ix0, iy0, ix1, iy1;
     float fx0, fy0, fx1, fy1;
     float s, t, nx0, nx1, n0, n1;
@@ -119,12 +126,12 @@ float ImprovedPerlinNoise::noise( float x, float y )
     t = FADE( fy0 );
     s = FADE( fx0 );
 
-    nx0 = grad(perm[ix0 + perm[iy0]], fx0, fy0);
-    nx1 = grad(perm[ix0 + perm[iy1]], fx0, fy1);
+    nx0 = grad(m_perm[ix0 + m_perm[iy0]], fx0, fy0);
+    nx1 = grad(m_perm[ix0 + m_perm[iy1]], fx0, fy1);
     n0 = LERP( t, nx0, nx1 );
 
-    nx0 = grad(perm[ix1 + perm[iy0]], fx1, fy0);
-    nx1 = grad(perm[ix1 + perm[iy1]], fx1, fy1);
+    nx0 = grad(m_perm[ix1 + m_perm[iy0]], fx1, fy0);
+    nx1 = grad(m_perm[ix1 + m_perm[iy1]], fx1, fy1);
     n1 = LERP(t, nx0, nx1);
 
 	float ret = ( LERP( s, n0, n1 ) );
