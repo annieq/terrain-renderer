@@ -76,10 +76,4 @@ typedef struct VS_CBUF_MATRIX
 	D3DXMATRIX viewProjMatrix;
 };
 
-typedef struct VS_CBUF_PERLIN
-{
-	D3DXVECTOR2 grad[8];
-	int perm[256];
-};
-
 #endif
