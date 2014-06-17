@@ -170,6 +170,44 @@ vector<vector<float>> DiamondSquare::formTerrain(int rows, int cols)
 			heights[x][y] = avg;
 		}
 	// array border
+	for (int i = side; i < areaSize - side; i+= side)
+	{
+		// top border
+		avg = heights[i-1][0]
+			+ heights[i+1][0]
+			+ heights[i-1][1]
+			+ heights[i+1][1]
+			+ heights[i  ][1];
+		avg /= 5.0;
+		heights[i][0] = avg;
+
+		// botom border
+		avg = heights[i-1][areaSize-1]
+			+ heights[i+1][areaSize-1]
+			+ heights[i-1][areaSize-2]
+			+ heights[i+1][areaSize-2]
+			+ heights[i  ][areaSize-2];
+		avg /= 5.0;
+		heights[i][areaSize-1] = avg;
+
+		// left border
+		avg = heights[0][i-1]
+			+ heights[0][i+1]
+			+ heights[1][i-1]
+			+ heights[1][i+1]
+			+ heights[1][i  ];
+		avg /= 5.0;
+		heights[0][i] = avg;
+
+		// right border
+		avg = heights[areaSize-1][i-1]
+			+ heights[areaSize-1][i+1]
+			+ heights[areaSize-2][i-1]
+			+ heights[areaSize-2][i+1]
+			+ heights[areaSize-2][i  ];
+		avg /= 5.0;
+		heights[areaSize-1][i] = avg;
+	}
 
 	// trim array
 	heights.resize(cols);
