@@ -168,8 +168,8 @@ int Terrain::checkPoints(D3DXVECTOR3* linep1,D3DXVECTOR3* linep2, bool shiftStat
 
 bool Terrain::saveToFile(std::string filename)
 {
-	double value;
-	cimg_library::CImg<> img(rows, cols, 1, 3);
+	float value;
+	cimg_library::CImg<float> img(rows, cols, 1, 1);
 	for (int j = 0; j < cols; ++j)
 		for (int i = 0; i < rows; ++i)
 		{
@@ -180,8 +180,6 @@ bool Terrain::saveToFile(std::string filename)
 			else if (value < 0)
 				value = 0.0;
 			img.atXY(i, j, 0, 0) = value;
-			img.atXY(i, j, 0, 1) = 0;
-			img.atXY(i, j, 0, 2) = 0;
 		}
 	img.channel(0);
 	img.save(filename.c_str());
@@ -191,24 +189,54 @@ bool Terrain::saveToFile(std::string filename)
 
 bool Terrain::loadFromFile(std::string filename)
 {
+	std::vector<float> tmp;
 	loadedPos.clear();
 
-	cimg_library::CImg<> img(filename.c_str());
+	cimg_library::CImg<float> img(filename.c_str());
 	img.channel(0);
 	float pix = 0.0;
 	for (int i = 0; i < img.size(); ++i)
 	{
 		pix = img.at(i);
 		//loadedPos.push_back( 128.0/255.0 * pix - 64.0 );
-		loadedPos.push_back(pix - 128.0);
+		//loadedPos.push_back(pix - 128.0);
+		tmp.push_back(pix - 128.0);
 	}
 	rows = img.width();
 	cols = img.height();
 
-	if (loadedPos.size() != rows*cols)
+	if (tmp.size() != rows*cols)
 	{
-		loadedPos.clear();
+		//loadedPos.clear();
 		return false;
+	}
+	
+	// smoothing
+	loadedPos.resize(rows*cols);
+	float avg;
+	for (int j = 1; j < cols - 1; ++j)
+		for (int i = 1; i < rows - 1; ++i)
+		{
+			avg = tmp[i-1 + (j-1)*rows]
+				+ tmp[i-1 + (j+1)*rows]
+				+ tmp[i-1 + (j  )*rows]
+				+ tmp[i   + (j-1)*rows]
+				+ tmp[i   + (j+1)*rows]
+				+ tmp[i+1 + (j-1)*rows]
+				+ tmp[i+1 + (j+1)*rows]
+				+ tmp[i+1 + (j  )*rows];
+			avg /= 8.0;
+			loadedPos[i + j*rows] = avg;
+		}
+	for (int i=0; i<rows; ++i)
+	{
+		loadedPos[i] = tmp[i];
+		loadedPos[i + (cols-1)*rows] = tmp[i + (cols-1)*rows];
+	}
+	for (int i=1; i<cols-1; ++i)
+	{
+		loadedPos[i*rows] = tmp[i*rows];
+		loadedPos[i*rows + rows-1] = tmp[i*rows + rows-1];
 	}
 
 	return true;

@@ -505,7 +505,8 @@ bool Renderer::doExperiment()
 	file.open("test.config");
 	if (!file.is_open())
 		return false;
-	file2.open("test.log");
+	CreateDirectory(L"test", NULL);
+	file2.open("test\\test.log");
 	if (!file2.is_open())
 		return false;
 
@@ -534,7 +535,6 @@ bool Renderer::doExperiment()
 						t = clock() - t;
 
 			// save results
-			CreateDirectory(L"test", NULL);
 			m_terr->saveToFile("test\\" + tostr(counter) + " " + str + "_" 
 									+ tostr(par.OCTAVES) + "_"
 									+ tostr(par.FREQ) + "_"
@@ -560,7 +560,6 @@ bool Renderer::doExperiment()
 						t = clock() - t;
 
 			// save results
-			CreateDirectory(L"test", NULL);
 			m_terr->saveToFile("test\\" + tostr(counter) + " " + str	+ "_" 
 									+ tostr(par.ITERATIONS) + "_"
 									+ tostr(par.DISPLACEMENT) + "_"
@@ -591,7 +590,6 @@ bool Renderer::doExperiment()
 						t = clock() - t;
 
 			// save results
-			CreateDirectory(L"test", NULL);
 			m_terr->saveToFile("test\\" + tostr(counter) + " " + str	+ "_" 
 									+ tostr(par.ROUGHNESS) + "_"
 									+ tostr(par.DISPLACEMENT) + "_"
@@ -604,7 +602,7 @@ bool Renderer::doExperiment()
 		// uncomment to see results :)
 		D3DXVECTOR3 v = D3DXVECTOR3(0.0, 0.0, 0.0);
 		renderFrame(v, v, false, false);
-		Sleep(300);
+		Sleep(200);
 	}
 	file.close();
 	file2.close();
