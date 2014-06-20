@@ -69,6 +69,23 @@ vector<vector<float>> ImprovedPerlinNoise::formTerrain(int rows, int cols)
 				freq /= 2.0;
 			}
 		}
+		
+	// rescale heights
+	float min = -127, max = 128;
+	for (int i=0; i<cols; ++i)
+		for (int j=0; j<rows; ++j)
+		{
+			if (heights[i][j] < min)
+				min = heights[i][j];
+			else if (heights[i][j] > max)
+				max = heights[i][j];
+		}
+	for (int i=0; i<cols; ++i)
+		for (int j=0; j<rows; ++j)
+		{
+			heights[i][j] = 255.0/(max-min) * (heights[i][j] - min) - 128.0;
+		}
+
 	return heights;
 }
 
