@@ -600,9 +600,9 @@ bool Renderer::doExperiment()
 			return false;
 
 		// uncomment to see results :)
-		D3DXVECTOR3 v = D3DXVECTOR3(0.0, 0.0, 0.0);
+		/*D3DXVECTOR3 v = D3DXVECTOR3(0.0, 0.0, 0.0);
 		renderFrame(v, v, false, false);
-		Sleep(200);
+		Sleep(200);*/
 	}
 	file.close();
 	file2.close();
